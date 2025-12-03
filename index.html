@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyO2 Web Simulator</title>
+    <script src="pixi.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+        :root {
+            --theme-orange: #ffae00;
+            --theme-orange-light: #ffd060;
+            --theme-orange-dark: #e08e00;
+            --theme-border: #5a3a1a;
+            --theme-pink: #ffb6c1;
+            --theme-bg: #fffbe8;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #fff url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIyIiBmaWxsPSIjZmZhZTAwIi8+PC9zdmc+') repeat;
+            font-family: 'Varela Round', 'Segoe UI', sans-serif;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #app { position: relative; width: 100%; height: 100%; }
+
+        /* --- Selection Screen (MyO2 Style) --- */
+        #select-view {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: opacity 0.5s;
+        }
+
+        .main-panel {
+            width: 960px;
+            height: 600px;
+            background: linear-gradient(180deg, var(--theme-orange-light) 0%, var(--theme-orange) 100%);
+            border: 8px solid var(--theme-border);
+            border-radius: 30px;
+            box-shadow: 
+                inset 0 0 0 4px #fff,
+                0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Header Decoration */
+        .header-deco {
+            position: absolute;
+            top: -40px;
+            left: 40px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iNTAiPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iMzUiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzVhM2ExYSIgc3Ryb2tlLXdpZHRoPSI0Ij7mrrYg5puOyYnmi6k8L3RleHQ+PC9zdmc+') no-repeat center;
+            width: 200px;
+            height: 60px;
+            z-index: 2;
+        }
+
+        .logo-deco {
+            position: absolute;
+            top: 10px;
+            left: 18px;
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 2px 2px 0 #fff, 4px 4px 0 var(--theme-border);
+            font-style: italic;
+        }
+
+        /* Left: Song List */
+        .list-container {
+            background: #fff;
+            border: 4px solid var(--theme-border);
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            background: var(--theme-orange);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 2px solid var(--theme-border);
+            margin-bottom: 4px;
+        }
+
+        .song-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.1s;
+            font-size: 14px;
+        }
+
+        .song-item:hover {
+            background: #fffbe8;
+            border-color: var(--theme-orange);
+        }
+
+        .song-item.active {
+            background: #ffe4b5;
+            border: 2px solid var(--theme-orange-dark);
+            font-weight: bold;
+            color: var(--theme-border);
+        }
+
+        .song-item .time {
+            color: #888;
+            font-family: monospace;
+        }
+
+        /* Right: Details */
+        .detail-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+        }
+
+        /* Cover Image */
+        .cover-box {
+            flex: 1;
+            background: #000;
+            border: 4px solid var(--theme-border);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2NiIgZm9udC1zaXplPSIyNCI+Tk8gSU1BR0U8L3RleHQ+PC9zdmc+');
+        }
+        
+        .cover-overlay {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            border: 2px solid #fff;
+        }
+
+        /* Difficulty Buttons */
+        .diff-bar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .diff-btn {
+            flex: 1;
+            padding: 8px 0;
+            border: 3px solid var(--theme-border);
+            border-radius: 12px;
+            background: #ccc;
+            color: #555;
+            font-weight: 900;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: all 0.1s;
+        }
+
+        .diff-btn:active { transform: translateY(4px); box-shadow: none; }
+        
+        .diff-btn.active { color: #fff; text-shadow: 1px 1px 0 #000; transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+
+        .diff-ez.active { background: #4ade80; border-color: #14532d; }
+        .diff-nm.active { background: #facc15; border-color: #713f12; }
+        .diff-hd.active { background: #60a5fa; border-color: #1e3a8a; }
+        .diff-mx.active { background: #f87171; border-color: #7f1d1d; }
+
+        /* Info Box */
+        .info-box {
+            background: var(--theme-pink);
+            border: 4px solid var(--theme-border);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+            padding-bottom: 4px;
+        }
+        .info-row:last-child { border-bottom: none; }
+        
+        .info-label { width: 80px; font-weight: bold; color: #d64545; }
+        .info-val { flex: 1; font-weight: bold; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* Side Buttons (Visual Only) */
+        .side-buttons {
+            position: absolute;
+            right: -60px;
+            top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .side-btn {
+            width: 80px;
+            height: 60px;
+            background: #ffebcd;
+            border: 4px solid var(--theme-border);
+            border-left: none;
+            border-radius: 0 16px 16px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--theme-border);
+            cursor: pointer;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+        }
+        .side-btn:hover { transform: translateX(4px); }
+
+        /* Bottom Action */
+        .action-bar {
+            position: absolute;
+            bottom: -20px;
+            left: calc(50% - 40px);
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+
+        .start-btn {
+            background: linear-gradient(to bottom, #ffe600, #ffcc00);
+            border: 5px solid var(--theme-border);
+            padding: 12px 60px;
+            font-size: 24px;
+            font-weight: 900;
+            border-radius: 50px;
+            color: var(--theme-border);
+            cursor: pointer;
+            box-shadow: 0 6px 0 #cfa600, 0 10px 10px rgba(0,0,0,0.3);
+            transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+        }
+
+        .start-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #cfa600;
+            background: linear-gradient(to bottom, #e6cf00, #e6b800);
+        }
+        .start-btn:disabled {
+            filter: grayscale(1);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 6px 0 #555;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Game Container */
+        #game-container {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        #game-container.active { opacity: 1; pointer-events: auto; }
+
+        /* HUD */
+        #game-hud { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+        .hud-top {
+            position: absolute; top: 20px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between;
+            font-family: 'Impact', sans-serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        .score-box { font-size: 2rem; color: #fff; }
+        .combo-box { 
+            position: absolute; top: 30%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            text-align: center; opacity: 0; 
+            transition: transform 0.1s;
+        }
+        .combo-num { font-size: 4rem; color: #00d2ff; -webkit-text-stroke: 2px #000; }
+        .combo-label { font-size: 1.2rem; letter-spacing: 4px; color: #fff; }
+
+        input[type="file"] { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="select-view">
+        <div class="logo-deco">MyO2_Re</div>
+
+        <div class="main-panel">
+            <!-- Left List -->
+            <div class="list-container">
+                <div class="list-header">
+                    <span>名称</span>
+                    <span>时间</span>
+                </div>
+                <!-- Simulated Items -->
+                <div class="song-item" id="btn-bms">
+                    <span>📂 加载本地谱面 (.bms/.txt)</span>
+                    <span class="time">--:--</span>
+                </div>
+                <div class="song-item" id="btn-audio">
+                    <span>🎵 加载本地音频 (.mp3/.ogg)</span>
+                    <span class="time">--:--</span>
+                </div>
+                <div class="song-item" id="btn-sample">
+                    <span>✨ 加载示例歌曲 (MingShen)</span>
+                    <span class="time">02:15</span>
+                </div>
+                <div class="song-item" style="opacity: 0.5; cursor: default;">
+                    <span>🔒 更多歌曲开发中...</span>
+                    <span class="time">--:--</span>
+                </div>
+            </div>
+
+            <!-- Right Detail -->
+            <div class="detail-panel">
+                <div class="cover-box" id="cover-box">
+                    <div class="cover-overlay" id="diff-display">NM: ??</div>
+                </div>
+
+                <div class="diff-bar">
+                    <div class="diff-btn diff-ez">EZ</div>
+                    <div class="diff-btn diff-nm active">NM</div>
+                    <div class="diff-btn diff-hd">HD</div>
+                    <div class="diff-btn diff-mx">MX</div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-row">
+                        <span class="info-label">歌曲名:</span>
+                        <span class="info-val" id="meta-title">未选择</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">艺术家:</span>
+                        <span class="info-val" id="meta-artist">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">文件:</span>
+                        <span class="info-val" id="meta-filename">--</span>
+                    </div>
+                    <div class="info-row" style="border:none; margin-top: 4px;">
+                        <span class="info-label">速度:</span>
+                        <span class="info-val" id="meta-bpm">--</span>
+                        <span class="info-label" style="width: 80px;">Notes:</span>
+                        <span class="info-val" id="meta-notes">--</span>
+                    </div>
+                </div>
+
+                <!-- Side Buttons -->
+                <div class="side-buttons">
+                    <div class="side-btn">
+                        <span>速度</span>
+                        <span style="font-size: 16px;">2x</span>
+                    </div>
+                    <div class="side-btn">
+                        <span>排序</span>
+                        <span style="font-size: 16px;">无</span>
+                    </div>
+                    <div class="side-btn">
+                        <span>视觉</span>
+                        <span style="font-size: 16px;">ON</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Start -->
+            <div class="action-bar">
+                <button class="start-btn" id="btn-start" disabled>开始游戏</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game View -->
+    <div id="game-container">
+        <div id="game-hud">
+            <div class="hud-top">
+                <div class="score-box" id="hud-score">000000</div>
+                <div class="score-box" id="hud-acc">100.00%</div>
+            </div>
+            <div class="combo-box" id="hud-combo-box">
+                <div class="combo-num" id="hud-combo">0</div>
+                <div class="combo-label">COMBO</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="input-bms" accept=".bms,.bme,.bml,.txt">
+<input type="file" id="input-audio" accept="audio/*">
+<audio id="bgm"></audio>
+
+<script type="module">
+    import { BMSParser } from './bms.js';
+    import { RhythmGame } from './game.js'; // Need to ensure game.js exports this class or adapts
+
+    // Since game.js currently declares class RhythmGame but doesn't export it (it was designed for window.gameApp),
+    // we need to modify game.js to export it, OR we just load game.js as module and it attaches to window.
+    // Let's assume game.js needs a small tweak or we adapt here.
+    // Wait, I wrote game.js as a module but didn't export class. 
+    // Actually I wrote `class RhythmGame` inside `type="module"` block? No, I wrote to `game.js`.
+    // Let's check `game.js` content again.
+    
+    // Logic Binding
+    const el = {
+        selectView: document.getElementById('select-view'),
+        gameContainer: document.getElementById('game-container'),
+        btnBms: document.getElementById('btn-bms'),
+        btnAudio: document.getElementById('btn-audio'),
+        btnSample: document.getElementById('btn-sample'),
+        btnStart: document.getElementById('btn-start'),
+        inputBms: document.getElementById('input-bms'),
+        inputAudio: document.getElementById('input-audio'),
+        
+        metaTitle: document.getElementById('meta-title'),
+        metaArtist: document.getElementById('meta-artist'),
+        metaBpm: document.getElementById('meta-bpm'),
+        metaNotes: document.getElementById('meta-notes'),
+        metaFilename: document.getElementById('meta-filename'),
+        diffDisplay: document.getElementById('diff-display'),
+        
+        bgm: document.getElementById('bgm')
+    };
+
+    const state = {
+        bmsText: null,
+        audioUrl: null,
+        chart: null,
+        ready: false
+    };
+
+    function updateReady() {
+        state.ready = !!(state.bmsText && state.audioUrl);
+        el.btnStart.disabled = !state.ready;
+        
+        if (state.chart) {
+            el.metaTitle.textContent = state.chart.title || '无标题';
+            el.metaArtist.textContent = state.chart.artist || '未知';
+            el.metaBpm.textContent = state.chart.initialBPM;
+            el.metaNotes.textContent = state.chart.notes.length;
+            // Auto-set difficulty label based on level if available
+            const level = state.chart.headers['PLAYLEVEL'] || '?';
+            el.diffDisplay.textContent = `LV: ${level}`;
+        }
+    }
+
+    // File Inputs
+    el.btnBms.onclick = () => el.inputBms.click();
+    el.btnAudio.onclick = () => el.inputAudio.click();
+
+    el.inputBms.onchange = async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        
+        // Highlight item
+        resetListActive();
+        el.btnBms.classList.add('active');
+        
+        state.bmsText = await f.text();
+        const parser = new BMSParser(state.bmsText);
+        state.chart = parser.parse();
+        
+        el.metaFilename.textContent = f.name;
+        updateReady();
+    };
+
+    el.inputAudio.onchange = (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        
+        resetListActive();
+        el.btnAudio.classList.add('active');
+
+        const url = URL.createObjectURL(f);
+        state.audioUrl = url;
+        el.bgm.src = url;
+        
+        // If BMS is already loaded, maybe update filename
+        if (!state.chart) el.metaFilename.textContent = f.name;
+        
+        updateReady();
+    };
+
+    // Sample
+    el.btnSample.onclick = async () => {
+        resetListActive();
+        el.btnSample.classList.add('active');
+        
+        try {
+            // Load BMS
+            const r1 = await fetch('MINGSHEN.bms');
+            if (!r1.ok) throw new Error('BMS Missing');
+            state.bmsText = await r1.text();
+            
+            // Load Audio
+            state.audioUrl = 'Laur - NS.mp3';
+            el.bgm.src = state.audioUrl;
+            
+            const parser = new BMSParser(state.bmsText);
+            state.chart = parser.parse();
+            
+            el.metaFilename.textContent = 'MINGSHEN.bms (Sample)';
+            updateReady();
+        } catch (e) {
+            alert('示例文件加载失败: ' + e.message);
+        }
+    };
+
+    function resetListActive() {
+        document.querySelectorAll('.song-item').forEach(d => d.classList.remove('active'));
+    }
+
+    // Start Game
+    el.btnStart.onclick = async () => {
+        if (!state.ready) return;
+        
+        el.selectView.classList.add('hidden');
+        el.gameContainer.classList.add('active');
+        
+        // Dynamic import game to ensure DOM is ready
+        const module = await import('./game.js');
+        // Assuming game.js exports RhythmGame class now
+        if (!window.gameInstance) {
+            window.gameInstance = new module.RhythmGame(el.gameContainer);
+        }
+        window.gameInstance.start(state.chart, state.audioUrl);
+    };
+
+</script>
+</body>
+</html>

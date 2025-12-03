@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="GB2312"?>
+<Skin>
+  <Info>
+    <PlayArea y="0" h="480" />
+    <ScoreNumberPos x="773" y="11" />
+    <ComboNumberPos x="382" />
+    <Title title="MyO2 4K -1234-" />
+  </Info>
+  <Styles>
+    <StyleSet stylesetID="1" name="背景">
+      <Style styleID="0" name="None" />
+      <Style styleID="1" name="BG1" />
+      <Style styleID="2" name="BG2" />
+      <Style styleID="3" name="BG3" />
+      <Style styleID="4" name="BG4" />
+      <Style styleID="5" name="BG5" />
+      <Style styleID="6" name="BG6" />
+      <Style styleID="7" name="BG7" />
+      <Style styleID="8" name="BG8" />
+      <Style styleID="9" name="BG9" />
+    </StyleSet>
+    <StyleSet stylesetID="2" name="特效">
+      <Style styleID="0" name="MyO2 7K Style" />
+      <Style styleID="1" name="MyO2 4K Style" />
+    </StyleSet>
+    <StyleSet stylesetID="3" name="字体">
+      <Style styleID="0" name="MyO2" />
+    </StyleSet>
+    <StyleSet stylesetID="4" name="Note">
+      <Style styleID="0" name="MyO2 Style" />
+      <Style styleID="1" name="- -!! Style" />
+    </StyleSet>
+  </Styles>
+  <Component>
+    <Panel PartCount="10" FixedPos="true" ID="0">
+      <part1 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="1" v="9" w="300" h="44" x="1" y="9" ImageName="BG.png" />
+      </part1>
+      <part1 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="301" v="0" w="211" h="325" x="302" y="0" ImageName="BG.png" />
+      </part1>
+      <part1 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="1" v="301" w="244" h="211" x="285" y="325" ImageName="BG.png" />
+      </part1>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="136" v="275" w="328" h="23" x="270" y="550" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="138" v="330" w="66" h="22" x="44" y="550" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="247" v="330" w="57" h="22" x="153" y="550" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="350" v="331" w="34" h="22" x="731" y="550" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="121+27*mod(mod(CurTime/60,10),5)" v="59+22*div(mod(CurTime/60,10),5)" w="27" h="21" x="11" y="55" ImageName="font1.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="121+27*mod(div(mod(CurTime,60),10),5)" v="59+22*div(div(mod(CurTime,60),10),5)" w="27" h="21" x="43" y="55" ImageName="font1.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="121+27*mod(mod(mod(CurTime,60),10),5)" v="59+22*div(mod(mod(CurTime,60),10),5)" w="27" h="21" x="70" y="55" ImageName="font1.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="373" v="382" w="80*BGVolume" h="10" destw="80*BGVolume" x="35" y="579" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="373" v="382" w="80*KeyVolume" h="10" destw="80*KeyVolume" x="140" y="579" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="1" v="52" w="28" h="28" x="737" y="571" orgy="min(0,BufferCount-1)*-99999" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="1" v="52" w="28" h="28" x="710" y="571" orgy="min(0,BufferCount-2)*-99999" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="1" v="52" w="28" h="28" x="683" y="571" orgy="min(0,BufferCount-3)*-99999" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="1" v="52" w="28" h="28" x="656" y="571" orgy="min(0,BufferCount-4)*-99999" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="1" v="52" w="28" h="28" x="629" y="571" orgy="min(0,BufferCount-5)*-99999" ImageName="main.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="257" v="256+194*(1-JamGagu/50)" w="6" h="194*JamGagu/50" x="292" y="342+194*(1-JamGagu/50)" desth="194*JamGagu/50" ImageName="BG.png" />
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="310" v="142" w="32" h="13" orgy="13" x="513" y="SegStart" ImageName="main.png" />
+        <!--分段练习标志-->
+      </part2>
+      <part2 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="310" v="142" w="32" h="13" orgy="13" x="513" y="SegEnd" ImageName="main.png" />
+        <!--分段练习标志-->
+      </part2>
+    </Panel>
+    <BackGround ID="10">
+      <part0 FrameCount="1">
+        <Frame0 u="121" v="57" w="20" h="64" x="0" y="536" ImageName="main.png" />
+      </part0>
+      <part0 FrameCount="1">
+        <Frame0 u="142" v="57" w="76" h="64" x="20" y="536" destw="760" ImageName="main.png" />
+      </part0>
+      <part0 FrameCount="1">
+        <Frame0 u="219" v="57" w="20" h="64" x="780" y="536" ImageName="main.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="1">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="001.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="2">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="002.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="3">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="003.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="4">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="004.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="5">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="005.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="6">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="006.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="7">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="007.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="8">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="008.png" />
+      </part0>
+      <part0 FrameCount="1" stylesetID="1" styleID="9">
+        <Frame0 u="0" v="0" w="1024" h="1024" x="0" y="0" destw="800" desth="536" ImageName="009.png" />
+      </part0>
+    </BackGround>
+    <ComboText PartCount="1" ID="9">
+      <Part0 FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true">
+        <Frame0 u="0" v="0" w="170" h="39" x="402" y="81" orgx="78" ImageName="ccombo.png" keyframeid="0" />
+        <Frame0 u="0" v="0" w="170" h="39" x="402" y="71" orgx="78" ImageName="ccombo.png" keyframeid="5" />
+        <Frame0 u="0" v="0" w="170" h="39" x="402" y="71" orgx="78" ImageName="ccombo.png" keyframeid="30" />
+      </Part0>
+    </ComboText>
+    <KeyDown2 PartCount="1" FixedPos="true" ID="50">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="407" v="444" w="47" h="42" x="311" y="483" ImageName="main.png" />
+      </Part0>
+    </KeyDown2>
+    <KeyDown3 PartCount="1" FixedPos="true" ID="51">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="455" v="444" w="48" h="42" x="357" y="483" ImageName="main.png" />
+      </Part0>
+    </KeyDown3>
+    <KeyDown5 PartCount="1" FixedPos="true" ID="52">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="455" v="444" w="48" h="42" x="410" y="483" ImageName="main.png" />
+      </Part0>
+    </KeyDown5>
+    <KeyDown6 PartCount="1" FixedPos="true" ID="53">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="407" v="444" w="47" h="42" x="457" y="483" ImageName="main.png" />
+      </Part0>
+    </KeyDown6>
+    <Note2 PartCount="1" ID="100">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="226" v="143" w="46" h="15" x="312" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="325" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY2+(LastNoteY2-CurNoteY2)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="342" colorR="0.388" colorG="0.49" colorB="0.611" y="CurNoteY2" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY2+(LastNoteY2-CurNoteY2)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="363" colorR="0.388" colorG="0.49" colorB="0.611" y="CurNoteY2" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+    </Note2>
+    <Note3 PartCount="1" ID="101">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="160" w="48" h="15" x="358" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="372" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY3+(LastNoteY3-CurNoteY3)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="364" colorR="0.55" colorG="0.55" colorB="0.55" y="CurNoteY3" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY3+(LastNoteY3-CurNoteY3)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="391" colorR="0.55" colorG="0.55" colorB="0.55" y="CurNoteY3" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+    </Note3>
+    <Note5 PartCount="1" ID="102">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="160" w="48" h="15" x="411" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="425" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY5+(LastNoteY5-CurNoteY5)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="424" colorR="0.55" colorG="0.55" colorB="0.55" y="CurNoteY5" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY5+(LastNoteY5-CurNoteY5)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="451" colorR="0.55" colorG="0.55" colorB="0.55" y="CurNoteY5" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+    </Note5>
+    <Note6 PartCount="1" ID="103">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="226" v="143" w="46" h="15" x="458" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="471" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY6+(LastNoteY6-CurNoteY6)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="452" colorR="0.388" colorG="0.49" colorB="0.611" y="CurNoteY6" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,CurNoteY6+(LastNoteY6-CurNoteY6)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="473" colorR="0.388" colorG="0.49" colorB="0.611" y="CurNoteY6" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2+3" ImageName="main.png" />
+      </Part0>
+    </Note6>
+    <ChannelActive2 PartCount="1" ID="200">
+      <Part0 FrameCount="1" Draw_ColorAdd="true">
+        <Frame0 u="425" v="1" w="16" h="248" x="311" y="232" destw="46" ImageName="main.png" />
+      </Part0>
+    </ChannelActive2>
+    <ChannelActive3 PartCount="1" ID="201">
+      <Part0 FrameCount="1" Draw_ColorAdd="true">
+        <Frame0 u="455" v="1" w="16" h="248" x="357" y="232" destw="48" ImageName="main.png" />
+      </Part0>
+    </ChannelActive3>
+    <ChannelActive5 PartCount="1" ID="202">
+      <Part0 FrameCount="1" Draw_ColorAdd="true">
+        <Frame0 u="455" v="1" w="16" h="248" x="410" y="232" destw="48" ImageName="main.png" />
+      </Part0>
+    </ChannelActive5>
+    <ChannelActive6 PartCount="1" ID="203">
+      <Part0 FrameCount="1" Draw_ColorAdd="true">
+        <Frame0 u="425" v="1" w="16" h="248" x="458" y="232" destw="46" ImageName="main.png" />
+      </Part0>
+    </ChannelActive6>
+    <LongNote2 PartCount="1" ID="150">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="226" v="143" w="46" h="15" x="312" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="275" v="196" w="45" h="8" x="312" orgy="5" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="226" v="143" w="46" h="15" x="312" orgy="12" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="325" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="189" w="21" h="1" x="325" orgy="0" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="325" orgy="14" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart2)" clipBottom="min(480,LNStart2+(LastNoteY2-LNStart2)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="342" y="LNStart2" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart2)" clipBottom="min(480,LNStart2+(LastNoteY2-LNStart2)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="363" y="LNStart2" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="342" y="LNEnd2" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="363" y="LNEnd2" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+    </LongNote2>
+    <LongNote3 PartCount="1" ID="151">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="160" w="48" h="15" x="358" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="196" w="47" h="8" x="358" orgy="5" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="160" w="48" h="15" x="358" orgy="12" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="372" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="189" w="21" h="1" x="372" orgy="0" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="372" orgy="14" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart3)" clipBottom="min(480,LNStart3+(LastNoteY3-LNStart3)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="364" y="LNStart3" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart3)" clipBottom="min(480,LNStart3+(LastNoteY3-LNStart3)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="391" y="LNStart3" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd3)">
+        <Frame0 u="94" v="200" w="1" h="125" x="364" y="LNEnd3" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd3)">
+        <Frame0 u="94" v="200" w="1" h="125" x="391" y="LNEnd3" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+    </LongNote3>
+    <LongNote5 PartCount="1" ID="152">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="160" w="48" h="15" x="411" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="196" w="47" h="8" x="411" orgy="5" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="225" v="160" w="48" h="15" x="411" orgy="12" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="425" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="189" w="21" h="1" x="425" orgy="0" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="425" orgy="14" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart5)" clipBottom="min(480,LNStart5+(LastNoteY5-LNStart5)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="424" y="LNStart1" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart5)" clipBottom="min(480,LNStart5+(LastNoteY5-LNStart5)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="451" y="LNStart5" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd5)">
+        <Frame0 u="94" v="200" w="1" h="125" x="424" y="LNEnd5" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd5)">
+        <Frame0 u="94" v="200" w="1" h="125" x="451" y="LNEnd5" colorR="0.55" colorG="0.55" colorB="0.55" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+    </LongNote5>
+    <LongNote6 PartCount="1" ID="153">
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="226" v="143" w="46" h="15" x="458" orgy="12" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="275" v="196" w="45" h="8" x="458" orgy="5" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="0">
+        <Frame0 u="226" v="143" w="46" h="15" x="458" orgy="12" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="471" orgy="14" ImageName="main.png" />
+      </Part0>
+      <Part1 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="189" w="21" h="1" x="471" orgy="0" ImageName="main.png" />
+      </Part1>
+      <Part2 FrameCount="1" Draw_AlphaTest="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480" stylesetID="4" styleID="1">
+        <Frame0 u="288" v="173" w="21" h="21" x="471" orgy="14" ImageName="main.png" />
+      </Part2>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart6)" clipBottom="min(480,LNStart6+(LastNoteY6-LNStart6)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="452" y="LNStart6" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="max(0,LNStart6)" clipBottom="min(480,LNStart6+(LastNoteY6-LNStart6)/2)">
+        <Frame0 u="94" v="200" w="1" h="125" x="473" y="LNStart6" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd6)">
+        <Frame0 u="94" v="200" w="1" h="125" x="452" y="LNEnd6" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+      <Part0 FrameCount="1" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="min(480,LNEnd6)">
+        <Frame0 u="94" v="200" w="1" h="125" x="473" y="LNEnd6" colorR="0.388" colorG="0.49" colorB="0.611" desth="CurHelpLineLevel*CurHelpLineLevel*16*2" orgy="(CurHelpLineLevel*CurHelpLineLevel*16*2)/2" ImageName="main.png" />
+      </Part0>
+    </LongNote6>
+    <TrackBar PartCount="1" ID="7">
+      <Part0 FrameCount="2" FrameSpeed="5" Draw_ColorAdd="true" EnableClip="true" clipLeft="0" clipRight="800" clipTop="0" clipBottom="480">
+        <Frame0 u="225" v="134" w="188" h="3" x="314" orgy="1" ImageName="main.png" />
+        <Frame0 u="225" v="138" w="188" h="3" x="314" orgy="1" ImageName="main.png" />
+      </Part0>
+    </TrackBar>
+    <CheckBar PartCount="1" ID="8">
+      <Part0 FrameCount="1">
+      </Part0>
+    </CheckBar>
+    <Flare1_0 PartCount="24" ID="254">
+    </Flare1_0>
+    <Flare2_0 PartCount="24" ID="250">
+      <Part0 FrameCount="11" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*0.35" orgy="65*0.35" destw="136*0.35" desth="130*0.35" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*1.35" orgy="65*1.35" destw="136*1.35" desth="130*1.35" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*1.95" orgy="65*1.95" destw="136*1.95" desth="130*1.95" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*1.80" orgy="65*1.80" destw="136*1.80" desth="130*1.80" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*1.60" orgy="65*1.60" destw="136*1.60" desth="130*1.60" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*1.38" orgy="65*1.38" destw="136*1.38" desth="130*1.38" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*1.14" orgy="65*1.14" destw="136*1.14" desth="130*1.14" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*0.88" orgy="65*0.88" destw="136*0.88" desth="130*0.88" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*0.60" orgy="65*0.60" destw="136*0.60" desth="130*0.60" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*0.30" orgy="65*0.30" destw="136*0.30" desth="130*0.30" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="335" y="476" orgx="68*0.12" orgy="65*0.12" destw="136*0.12" desth="130*0.12" ImageName="flare.png" />
+      </Part0>
+      <Part0 FrameCount="12" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="335" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="0" />
+        <Frame0 u="0" v="0" w="256" h="256" x="335" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="11" />
+      </Part0>
+      <Part1 FrameCount="5" FrameSpeed="12.5" stylesetID="2" styleID="0">
+        <Frame0 u="69" v="77" w="48" h="6" x="312" y="472" destw="192" desth="8" ImageName="BG.png" keyframeid="0" />
+      </Part1>
+    </Flare2_0>
+    <Flare3_0 PartCount="24" ID="251">
+      <Part0 FrameCount="11" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*0.35" orgy="65*0.35" destw="136*0.35" desth="130*0.35" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*1.35" orgy="65*1.35" destw="136*1.35" desth="130*1.35" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*1.95" orgy="65*1.95" destw="136*1.95" desth="130*1.95" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*1.80" orgy="65*1.80" destw="136*1.80" desth="130*1.80" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*1.60" orgy="65*1.60" destw="136*1.60" desth="130*1.60" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*1.38" orgy="65*1.38" destw="136*1.38" desth="130*1.38" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*1.14" orgy="65*1.14" destw="136*1.14" desth="130*1.14" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*0.88" orgy="65*0.88" destw="136*0.88" desth="130*0.88" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*0.60" orgy="65*0.60" destw="136*0.60" desth="130*0.60" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*0.30" orgy="65*0.30" destw="136*0.30" desth="130*0.30" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="381" y="476" orgx="68*0.12" orgy="65*0.12" destw="136*0.12" desth="130*0.12" ImageName="flare.png" />
+      </Part0>
+      <Part0 FrameCount="12" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="381" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="0" />
+        <Frame0 u="0" v="0" w="256" h="256" x="381" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="11" />
+      </Part0>
+      <Part1 FrameCount="5" FrameSpeed="12.5" stylesetID="2" styleID="0">
+        <Frame0 u="69" v="77" w="48" h="6" x="312" y="472" destw="192" desth="8" ImageName="BG.png" keyframeid="0" />
+      </Part1>
+    </Flare3_0>
+    <Flare4_0 PartCount="24" ID="255">
+    </Flare4_0>
+    <Flare5_0 PartCount="24" ID="252">
+      <Part0 FrameCount="11" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*0.35" orgy="65*0.35" destw="136*0.35" desth="130*0.35" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*1.35" orgy="65*1.35" destw="136*1.35" desth="130*1.35" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*1.95" orgy="65*1.95" destw="136*1.95" desth="130*1.95" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*1.80" orgy="65*1.80" destw="136*1.80" desth="130*1.80" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*1.60" orgy="65*1.60" destw="136*1.60" desth="130*1.60" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*1.38" orgy="65*1.38" destw="136*1.38" desth="130*1.38" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*1.14" orgy="65*1.14" destw="136*1.14" desth="130*1.14" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*0.88" orgy="65*0.88" destw="136*0.88" desth="130*0.88" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*0.60" orgy="65*0.60" destw="136*0.60" desth="130*0.60" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*0.30" orgy="65*0.30" destw="136*0.30" desth="130*0.30" ImageName="flare.png" />
+        <Frame0 u="60" v="29" w="136" h="65" x="434" y="476" orgx="68*0.12" orgy="65*0.12" destw="136*0.12" desth="130*0.12" ImageName="flare.png" />
+      </Part0>
+      <Part0 FrameCount="12" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="434" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="0" />
+        <Frame0 u="0" v="0" w="256" h="256" x="434" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="11" />
+      </Part0>
+      <Part1 FrameCount="5" FrameSpeed="12.5" stylesetID="2" styleID="0">
+        <Frame0 u="69" v="77" w="48" h="6" x="312" y="472" destw="192" desth="8" ImageName="BG.png" keyframeid="0" />
+      </Part1>
+    </Flare5_0>
+    <Flare6_0 PartCount="24" ID="253">
+      <Part0 FrameCount="11" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*0.35" orgy="65*0.35" destw="136*0.35" desth="130*0.35" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*1.35" orgy="65*1.35" destw="136*1.35" desth="130*1.35" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*1.95" orgy="65*1.95" destw="136*1.95" desth="130*1.95" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*1.80" orgy="65*1.80" destw="136*1.80" desth="130*1.80" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*1.60" orgy="65*1.60" destw="136*1.60" desth="130*1.60" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*1.38" orgy="65*1.38" destw="136*1.38" desth="130*1.38" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*1.14" orgy="65*1.14" destw="136*1.14" desth="130*1.14" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*0.88" orgy="65*0.88" destw="136*0.88" desth="130*0.88" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*0.60" orgy="65*0.60" destw="136*0.60" desth="130*0.60" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*0.30" orgy="65*0.30" destw="136*0.30" desth="130*0.30" ImageName="flare.png" />
+        <Frame0 u="60" v="161" w="136" h="65" x="481" y="476" orgx="68*0.12" orgy="65*0.12" destw="136*0.12" desth="130*0.12" ImageName="flare.png" />
+      </Part0>
+      <Part0 FrameCount="12" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="481" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="0" />
+        <Frame0 u="0" v="0" w="256" h="256" x="481" y="476" orgx="128" orgy="128" ImageName="Flare$(Frame).png" keyframeid="11" />
+      </Part0>
+      <Part1 FrameCount="5" FrameSpeed="12.5" stylesetID="2" styleID="0">
+        <Frame0 u="69" v="77" w="48" h="6" x="312" y="472" destw="192" desth="8" ImageName="BG.png" keyframeid="0" />
+      </Part1>
+    </Flare6_0>
+    <Flare7_0 PartCount="24" ID="256">
+    </Flare7_0>
+    <Flare1_1 PartCount="1" ID="300" CopyFromID="250" />
+    <Flare2_1 PartCount="1" ID="301" CopyFromID="251" />
+    <Flare3_1 PartCount="1" ID="302" CopyFromID="252" />
+    <Flare4_1 PartCount="1" ID="303" CopyFromID="253" />
+    <Flare5_1 PartCount="1" ID="304" CopyFromID="254" />
+    <Flare6_1 PartCount="1" ID="305" CopyFromID="255" />
+    <Flare7_1 PartCount="1" ID="306" CopyFromID="256" />
+    <FlareLong1 PartCount="1" ID="354">
+    </FlareLong1>
+    <FlareLong2 PartCount="1" ID="350">
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="0" v="0" w="134" h="65" x="335" y="476" orgx="67*0.35" orgy="58*0.35" destw="134*0.35" desth="130*0.35" ImageName="flarelong.png" />
+        <Frame0 u="0" v="0" w="134" h="65" x="335" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+        <Frame0 u="0" v="0" w="134" h="65" x="335" y="476" orgx="67*1.00" orgy="58*1.00" destw="134*1.00" desth="130*1.00" ImageName="flarelong.png" />
+        <Frame0 u="0" v="0" w="134" h="65" x="335" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+      </Part0>
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="335" y="476" orgx="128*1.0" orgy="128*1.0" destw="256*1.0" desth="256*1.0" ImageName="longflarel.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="335" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflarel.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="335" y="476" orgx="128*0.8" orgy="128*0.8" destw="256*0.8" desth="256*0.8" ImageName="longflarel.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="335" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflarel.png" />
+      </Part0>
+    </FlareLong2>
+    <FlareLong3 PartCount="1" ID="351">
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="0" v="132" w="134" h="65" x="381" y="476" orgx="67*0.35" orgy="58*0.35" destw="134*0.35" desth="130*0.35" ImageName="flarelong.png" />
+        <Frame0 u="0" v="132" w="134" h="65" x="381" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+        <Frame0 u="0" v="132" w="134" h="65" x="381" y="476" orgx="67*1.00" orgy="58*1.00" destw="134*1.00" desth="130*1.00" ImageName="flarelong.png" />
+        <Frame0 u="0" v="132" w="134" h="65" x="381" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+      </Part0>
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="381" y="476" orgx="128*1.0" orgy="128*1.0" destw="256*1.0" desth="256*1.0" ImageName="longflareb.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="381" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflareb.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="381" y="476" orgx="128*0.8" orgy="128*0.8" destw="256*0.8" desth="256*0.8" ImageName="longflareb.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="381" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflareb.png" />
+      </Part0>
+    </FlareLong3>
+    <FlareLong4 PartCount="1" ID="355">
+    </FlareLong4>
+    <FlareLong5 PartCount="1" ID="352">
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="0" v="132" w="134" h="65" x="434" y="476" orgx="67*0.35" orgy="58*0.35" destw="134*0.35" desth="130*0.35" ImageName="flarelong.png" />
+        <Frame0 u="0" v="132" w="134" h="65" x="434" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+        <Frame0 u="0" v="132" w="134" h="65" x="434" y="476" orgx="67*1.00" orgy="58*1.00" destw="134*1.00" desth="130*1.00" ImageName="flarelong.png" />
+        <Frame0 u="0" v="132" w="134" h="65" x="434" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+      </Part0>
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="434" y="476" orgx="128*1.0" orgy="128*1.0" destw="256*1.0" desth="256*1.0" ImageName="longflareb.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="434" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflareb.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="434" y="476" orgx="128*0.8" orgy="128*0.8" destw="256*0.8" desth="256*0.8" ImageName="longflareb.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="434" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflareb.png" />
+      </Part0>
+    </FlareLong5>
+    <FlareLong6 PartCount="1" ID="353">
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="0">
+        <Frame0 u="0" v="0" w="134" h="65" x="481" y="476" orgx="67*0.35" orgy="58*0.35" destw="134*0.35" desth="130*0.35" ImageName="flarelong.png" />
+        <Frame0 u="0" v="0" w="134" h="65" x="481" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+        <Frame0 u="0" v="0" w="134" h="65" x="481" y="476" orgx="67*1.00" orgy="58*1.00" destw="134*1.00" desth="130*1.00" ImageName="flarelong.png" />
+        <Frame0 u="0" v="0" w="134" h="65" x="481" y="476" orgx="67*0.65" orgy="58*0.65" destw="134*0.65" desth="130*0.65" ImageName="flarelong.png" />
+      </Part0>
+      <Part0 FrameCount="4" FrameSpeed="60" Draw_ColorAdd="true" stylesetID="2" styleID="1">
+        <Frame0 u="0" v="0" w="256" h="256" x="481" y="476" orgx="128*1.0" orgy="128*1.0" destw="256*1.0" desth="256*1.0" ImageName="longflarel.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="481" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflarel.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="481" y="476" orgx="128*0.8" orgy="128*0.8" destw="256*0.8" desth="256*0.8" ImageName="longflarel.png" />
+        <Frame0 u="0" v="0" w="256" h="256" x="481" y="476" orgx="128*0.9" orgy="128*0.9" destw="256*0.9" desth="256*0.9" ImageName="longflarel.png" />
+      </Part0>
+    </FlareLong6>
+    <FlareLong7 PartCount="1" ID="356">
+    </FlareLong7>
+    <Judgment_Fail PartCount="1" ID="1">
+      <Part FrameCount="18" FrameSpeed="60" Draw_SrcBlend="true" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame0 alpha="0.4" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18*1.48-12" orgx="84*1.48" ImageName="j.png" destw="168*1.48" desth="37*1.48" keyframeid="0" />
+        <Frame0 alpha="0.5" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18*1.40-10" orgx="84*1.40" ImageName="j.png" destw="168*1.40" desth="37*1.40" keyframeid="1" />
+        <Frame0 alpha="0.6" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18*1.32-8" orgx="84*1.32" ImageName="j.png" destw="168*1.32" desth="37*1.32" keyframeid="2" />
+        <Frame0 alpha="0.7" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18*1.24-6" orgx="84*1.24" ImageName="j.png" destw="168*1.24" desth="37*1.24" keyframeid="3" />
+        <Frame0 alpha="0.8" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18*1.16-4" orgx="84*1.16" ImageName="j.png" destw="168*1.16" desth="37*1.16" keyframeid="4" />
+        <Frame0 alpha="0.9" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18*1.08-2" orgx="84*1.08" ImageName="j.png" destw="168*1.08" desth="37*1.08" keyframeid="5" />
+        <Frame0 alpha="1" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="6" />
+        <Frame0 alpha="1" u="0" v="114" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="17" />
+      </Part>
+    </Judgment_Fail>
+    <Judgment_Bad PartCount="1" ID="2">
+      <Part FrameCount="18" FrameSpeed="60" Draw_SrcBlend="true" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame0 alpha="0.4" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18*1.48-12" orgx="84*1.48" ImageName="j.png" destw="168*1.48" desth="37*1.48" keyframeid="0" />
+        <Frame0 alpha="0.5" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18*1.40-10" orgx="84*1.40" ImageName="j.png" destw="168*1.40" desth="37*1.40" keyframeid="1" />
+        <Frame0 alpha="0.6" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18*1.32-8" orgx="84*1.32" ImageName="j.png" destw="168*1.32" desth="37*1.32" keyframeid="2" />
+        <Frame0 alpha="0.7" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18*1.24-6" orgx="84*1.24" ImageName="j.png" destw="168*1.24" desth="37*1.24" keyframeid="3" />
+        <Frame0 alpha="0.8" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18*1.16-4" orgx="84*1.16" ImageName="j.png" destw="168*1.16" desth="37*1.16" keyframeid="4" />
+        <Frame0 alpha="0.9" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18*1.08-2" orgx="84*1.08" ImageName="j.png" destw="168*1.08" desth="37*1.08" keyframeid="5" />
+        <Frame0 alpha="1" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="6" />
+        <Frame0 alpha="1" u="0" v="76" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="17" />
+      </Part>
+    </Judgment_Bad>
+    <Judgment_Good PartCount="1" ID="3">
+      <Part FrameCount="18" FrameSpeed="60" Draw_SrcBlend="true" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame0 alpha="0.4" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18*1.48-12" orgx="84*1.48" ImageName="j.png" destw="168*1.48" desth="37*1.48" keyframeid="0" />
+        <Frame0 alpha="0.5" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18*1.40-10" orgx="84*1.40" ImageName="j.png" destw="168*1.40" desth="37*1.40" keyframeid="1" />
+        <Frame0 alpha="0.6" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18*1.32-8" orgx="84*1.32" ImageName="j.png" destw="168*1.32" desth="37*1.32" keyframeid="2" />
+        <Frame0 alpha="0.7" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18*1.24-6" orgx="84*1.24" ImageName="j.png" destw="168*1.24" desth="37*1.24" keyframeid="3" />
+        <Frame0 alpha="0.8" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18*1.16-4" orgx="84*1.16" ImageName="j.png" destw="168*1.16" desth="37*1.16" keyframeid="4" />
+        <Frame0 alpha="0.9" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18*1.08-2" orgx="84*1.08" ImageName="j.png" destw="168*1.08" desth="37*1.08" keyframeid="5" />
+        <Frame0 alpha="1" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="6" />
+        <Frame0 alpha="1" u="0" v="38" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="17" />
+      </Part>
+    </Judgment_Good>
+    <Judgment_Cool PartCount="1" ID="4">
+      <Part FrameCount="18" FrameSpeed="60" Draw_SrcBlend="true" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame0 alpha="0.4" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18*1.48-12" orgx="84*1.48" ImageName="j.png" destw="168*1.48" desth="37*1.48" keyframeid="0" />
+        <Frame0 alpha="0.5" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18*1.40-10" orgx="84*1.40" ImageName="j.png" destw="168*1.40" desth="37*1.40" keyframeid="1" />
+        <Frame0 alpha="0.6" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18*1.32-8" orgx="84*1.32" ImageName="j.png" destw="168*1.32" desth="37*1.32" keyframeid="2" />
+        <Frame0 alpha="0.7" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18*1.24-6" orgx="84*1.24" ImageName="j.png" destw="168*1.24" desth="37*1.24" keyframeid="3" />
+        <Frame0 alpha="0.8" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18*1.16-4" orgx="84*1.16" ImageName="j.png" destw="168*1.16" desth="37*1.16" keyframeid="4" />
+        <Frame0 alpha="0.9" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18*1.08-2" orgx="84*1.08" ImageName="j.png" destw="168*1.08" desth="37*1.08" keyframeid="5" />
+        <Frame0 alpha="1" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="6" />
+        <Frame0 alpha="1" u="0" v="0" w="168" h="37" y="393" x="410" orgy="18" orgx="84" ImageName="j.png" destw="168" desth="37" keyframeid="17" />
+      </Part>
+    </Judgment_Cool>
+    <ComboNumber0 ID="400">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c0.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c0.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c0.png" keyframeid="30" />
+      </Part>
+    </ComboNumber0>
+    <ComboNumber1 ID="401">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c1.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c1.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c1.png" keyframeid="30" />
+      </Part>
+    </ComboNumber1>
+    <ComboNumber2 ID="402">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c2.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c2.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c2.png" keyframeid="30" />
+      </Part>
+    </ComboNumber2>
+    <ComboNumber3 ID="403">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c3.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c3.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c3.png" keyframeid="30" />
+      </Part>
+    </ComboNumber3>
+    <ComboNumber4 ID="404">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c4.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c4.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c4.png" keyframeid="30" />
+      </Part>
+    </ComboNumber4>
+    <ComboNumber5 ID="405">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c5.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c5.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c5.png" keyframeid="30" />
+      </Part>
+    </ComboNumber5>
+    <ComboNumber6 ID="406">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c6.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c6.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c6.png" keyframeid="30" />
+      </Part>
+    </ComboNumber6>
+    <ComboNumber7 ID="407">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c7.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c7.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c7.png" keyframeid="30" />
+      </Part>
+    </ComboNumber7>
+    <ComboNumber8 ID="408">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c8.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c8.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c8.png" keyframeid="30" />
+      </Part>
+    </ComboNumber8>
+    <ComboNumber9 ID="409">
+      <Part FrameCount="31" FrameSpeed="60" Draw_AlphaTest="true" KeyFraming="true" stylesetID="3" styleID="0">
+        <Frame u="0" v="0" w="59" h="56" y="146" x="70" orgy="0" orgx="34" ImageName="c9.png" keyframeid="0" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c9.png" keyframeid="5" />
+        <Frame u="0" v="0" w="59" h="56" y="136" x="70" orgy="0" orgx="34" ImageName="c9.png" keyframeid="30" />
+      </Part>
+    </ComboNumber9>
+    <ScoreNumber0 PartCount="1" ID="410">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="259" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber1 PartCount="1" ID="411">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="284" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber1>
+    <ScoreNumber0 PartCount="1" ID="412">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="309" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber0 PartCount="1" ID="413">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="334" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber0 PartCount="1" ID="414">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="359" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber0 PartCount="1" ID="415">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="384" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber0 PartCount="1" ID="416">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="409" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber0 PartCount="1" ID="417">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="434" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber0 PartCount="1" ID="418">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="459" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <ScoreNumber0 PartCount="1" ID="419">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="484" v="485" w="25" h="21" y="452" x="171" orgy="0" orgx="24" ImageName="BG.png" />
+      </Part0>
+    </ScoreNumber0>
+    <LifeBar PartCount="1" ID="6">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="272" v="253" w="9" h="197" y="339" x="515" orgy="0" orgx="0" ImageName="BG.png" />
+      </Part0>
+    </LifeBar>
+    <maxcombonumber0 PartCount="1" ID="460">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="CurDig*18+82" v="15" w="17" h="21" x="579-CurDigPos*10" y="573" ImageName="main.png" />
+      </Part0>
+    </maxcombonumber0>
+    <MissCountNumber0 PartCount="1" ID="420">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="CurDig*18+82" v="15" w="17" h="21" x="496-CurDigPos*10" y="573" ImageName="main.png" />
+      </Part0>
+    </MissCountNumber0>
+    <BadCountNumber0 PartCount="1" ID="430">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="CurDig*18+82" v="15" w="17" h="21" x="429-CurDigPos*10" y="573" ImageName="main.png" />
+      </Part0>
+    </BadCountNumber0>
+    <GoodCountNumber0 PartCount="1" ID="440">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="CurDig*18+82" v="15" w="17" h="21" x="362-CurDigPos*10" y="573" ImageName="main.png" />
+      </Part0>
+    </GoodCountNumber0>
+    <CoolCountNumber0 PartCount="1" ID="450">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="CurDig*18+82" v="15" w="17" h="21" x="295-CurDigPos*10" y="573" ImageName="main.png" />
+      </Part0>
+    </CoolCountNumber0>
+    <time PartCount="2" ID="11">
+      <Part0 FrameCount="1" FullUV="true">
+        <Frame0 u="370" v="464" w="130*TimePassed" h="10" x="18" y="40" destw="130*TimePassed" ImageName="BG.png" />
+      </Part0>
+    </time>
+    <TrackScaleNumber0 PartCount="1" ID="480">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="CurDig*21+69" v="112" w="20" h="21" x="215" y="10" ImageName="BG.png" />
+      </Part0>
+    </TrackScaleNumber0>
+    <TrackScaleNumber0 PartCount="1" ID="470">
+      <Part0 FrameCount="1" Draw_AlphaTest="true">
+        <Frame0 u="CurDig*18+69" v="86" w="17" h="22" x="198-CurDigPos*15" y="9" ImageName="BG.png" />
+      </Part0>
+    </TrackScaleNumber0>
+  </Component>
+  <IDRange>
+    <!--
+		startid		maxcount	desc	
+		0			1			panel
+		1			1			judgement fail(MISS)
+		2			1			judgement bad
+		3			1			judgement good
+		4			1			judgement cool
+		5			1			judgement kool
+		6			1			lifebar
+		7			1			trackbar
+		8			1			checkbar
+		9			1			combo text
+		10			1			bg
+		50			50			keydown
+		100			50			note
+		150			50			longnote
+		200			50			channelactive
+		250			50			flare cool
+		300			50			flare kool
+		350			50			longflare1
+		400			10			combo number
+		410			10			score number
+		460			10			max combo number
+		!-->
+  </IDRange>
+</Skin>
