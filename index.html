@@ -9,12 +9,12 @@
         @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
         :root {
-            --theme-orange: #ffae00;
-            --theme-orange-light: #ffd060;
-            --theme-orange-dark: #e08e00;
-            --theme-border: #5a3a1a;
-            --theme-pink: #ffb6c1;
-            --theme-bg: #fffbe8;
+            --theme-orange: #00eaff;
+            --theme-orange-light: #5af7ff;
+            --theme-orange-dark: #00b3cc;
+            --theme-border: #0a1a2f;
+            --theme-pink: #7c4dff;
+            --theme-bg: #0b1220;
         }
 
         * { box-sizing: border-box; user-select: none; }
@@ -22,7 +22,7 @@
         body {
             margin: 0;
             height: 100vh;
-            background: #fff url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIyIiBmaWxsPSIjZmZhZTAwIi8+PC9zdmc+') repeat;
+            background: radial-gradient(1000px 600px at 50% 30%, #0b1e35 0%, #060b14 60%, #04070d 100%);
             font-family: 'Varela Round', 'Segoe UI', sans-serif;
             overflow: hidden;
             display: flex;
@@ -46,12 +46,12 @@
         .main-panel {
             width: 960px;
             height: 600px;
-            background: linear-gradient(180deg, var(--theme-orange-light) 0%, var(--theme-orange) 100%);
-            border: 8px solid var(--theme-border);
+            background: linear-gradient(180deg, rgba(10,26,47,0.9) 0%, rgba(15,34,61,0.95) 100%);
+            border: 2px solid #0ef;
             border-radius: 30px;
-            box-shadow: 
-                inset 0 0 0 4px #fff,
-                0 20px 40px rgba(0,0,0,0.3);
+            box-shadow:
+                0 0 24px rgba(0,238,255,0.25),
+                0 20px 40px rgba(0,0,0,0.5);
             position: relative;
             display: grid;
             grid-template-columns: 400px 1fr;
@@ -83,8 +83,8 @@
 
         /* Left: Song List */
         .list-container {
-            background: #fff;
-            border: 4px solid var(--theme-border);
+            background: rgba(10,26,47,0.6);
+            border: 2px solid #0ef;
             border-radius: 16px;
             padding: 10px;
             display: flex;
@@ -92,18 +92,18 @@
             gap: 8px;
             height: 100%;
             overflow-y: auto;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 20px rgba(0,238,255,0.08);
         }
 
         .list-header {
             display: flex;
             justify-content: space-between;
-            background: var(--theme-orange);
-            color: #fff;
+            background: rgba(0,238,255,0.15);
+            color: #c8f8ff;
             padding: 8px 12px;
             border-radius: 8px;
             font-weight: bold;
-            border: 2px solid var(--theme-border);
+            border: 1px solid #0ef;
             margin-bottom: 4px;
         }
 
@@ -111,24 +111,26 @@
             display: flex;
             justify-content: space-between;
             padding: 10px 12px;
-            background: #f0f0f0;
+            background: rgba(255,255,255,0.06);
             border-radius: 6px;
             cursor: pointer;
-            border: 1px solid transparent;
+            border: 1px solid rgba(0,238,255,0.2);
             transition: all 0.1s;
             font-size: 14px;
+            color: #d9eaff;
         }
 
         .song-item:hover {
-            background: #fffbe8;
-            border-color: var(--theme-orange);
+            background: rgba(0,238,255,0.12);
+            border-color: #0ef;
         }
 
         .song-item.active {
-            background: #ffe4b5;
-            border: 2px solid var(--theme-orange-dark);
+            background: rgba(0,238,255,0.18);
+            border: 2px solid #0ef;
             font-weight: bold;
-            color: var(--theme-border);
+            color: #c8f8ff;
+            box-shadow: 0 0 10px rgba(0,238,255,0.25);
         }
 
         .song-item .time {
@@ -148,25 +150,25 @@
         .cover-box {
             flex: 1;
             background: #000;
-            border: 4px solid var(--theme-border);
+            border: 2px solid #0ef;
             border-radius: 16px;
             position: relative;
             overflow: hidden;
             background-size: cover;
             background-position: center;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY2NiIgZm9udC1zaXplPSIyNCI+Tk8gSU1BR0U8L3RleHQ+PC9zdmc+');
         }
         
         .cover-overlay {
             position: absolute;
             bottom: 10px;
             right: 10px;
-            background: rgba(0,0,0,0.6);
-            color: #fff;
+            background: rgba(0,238,255,0.12);
+            color: #c8f8ff;
             padding: 4px 12px;
             border-radius: 20px;
             font-weight: bold;
-            border: 2px solid #fff;
+            border: 1px solid #0ef;
+            box-shadow: 0 0 10px rgba(0,238,255,0.25);
         }
 
         /* Difficulty Buttons */
@@ -179,14 +181,14 @@
         .diff-btn {
             flex: 1;
             padding: 8px 0;
-            border: 3px solid var(--theme-border);
+            border: 2px solid #0ef;
             border-radius: 12px;
-            background: #ccc;
-            color: #555;
+            background: rgba(0,238,255,0.1);
+            color: #c8f8ff;
             font-weight: 900;
             cursor: pointer;
             text-align: center;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            box-shadow: 0 0 10px rgba(0,238,255,0.25);
             transform: translateY(0);
             transition: all 0.1s;
         }
@@ -202,11 +204,12 @@
 
         /* Info Box */
         .info-box {
-            background: var(--theme-pink);
-            border: 4px solid var(--theme-border);
+            background: rgba(10,26,47,0.6);
+            border: 2px solid #0ef;
             border-radius: 16px;
             padding: 16px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 20px rgba(0,238,255,0.08);
+            color: #c8f8ff;
         }
 
         .info-row {
@@ -217,13 +220,13 @@
         }
         .info-row:last-child { border-bottom: none; }
         
-        .info-label { width: 80px; font-weight: bold; color: #d64545; }
-        .info-val { flex: 1; font-weight: bold; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .info-label { width: 80px; font-weight: bold; color: #5af7ff; }
+        .info-val { flex: 1; font-weight: bold; color: #d9eaff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         /* Side Buttons (Visual Only) */
         .side-buttons {
             position: absolute;
-            right: -60px;
+            right: -140px;
             top: 40px;
             display: flex;
             flex-direction: column;
@@ -231,10 +234,10 @@
         }
         
         .side-btn {
-            width: 80px;
+            width: 100px;
             height: 60px;
-            background: #ffebcd;
-            border: 4px solid var(--theme-border);
+            background: rgba(0,238,255,0.12);
+            border: 1px solid #0ef;
             border-left: none;
             border-radius: 0 16px 16px 0;
             display: flex;
@@ -243,31 +246,35 @@
             justify-content: center;
             font-size: 12px;
             font-weight: bold;
-            color: var(--theme-border);
+            color: #c8f8ff;
             cursor: pointer;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+            box-shadow: 0 0 12px rgba(0,238,255,0.25);
         }
         .side-btn:hover { transform: translateX(4px); }
+
+        .speed-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+        .arrow-btn { width: 28px; height: 24px; border: 2px solid var(--theme-border); border-radius: 6px; background: #fff; cursor: pointer; font-weight: 900; line-height: 20px; text-align: center; }
+        .arrow-btn:active { transform: translateY(2px); }
 
         /* Bottom Action */
         .action-bar {
             position: absolute;
-            bottom: -20px;
-            left: calc(50% - 40px);
+            bottom: -120px;
+            left: 50%;
             transform: translateX(-50%);
-            z-index: 5;
+            z-index: 1;
         }
 
         .start-btn {
-            background: linear-gradient(to bottom, #ffe600, #ffcc00);
-            border: 5px solid var(--theme-border);
+            background: linear-gradient(180deg, #00eaff 0%, #00b3cc 100%);
+            border: 2px solid #0ef;
             padding: 12px 60px;
             font-size: 24px;
             font-weight: 900;
             border-radius: 50px;
-            color: var(--theme-border);
+            color: #0a1a2f;
             cursor: pointer;
-            box-shadow: 0 6px 0 #cfa600, 0 10px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(0,238,255,0.35), 0 10px 20px rgba(0,0,0,0.4);
             transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
         }
 
@@ -297,6 +304,21 @@
         }
         #game-container.active { opacity: 1; pointer-events: auto; }
 
+        .exit-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 21;
+            padding: 8px 16px;
+            border: 3px solid var(--theme-border);
+            border-radius: 12px;
+            background: #ffe4b5;
+            color: var(--theme-border);
+            font-weight: 900;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
         /* HUD */
         #game-hud { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
         .hud-top {
@@ -305,6 +327,9 @@
             font-family: 'Impact', sans-serif;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
+        .health-bar { position: absolute; right: 24px; top: 10%; bottom: 10%; width: 16px; border: 2px solid #0ef; border-radius: 10px; box-shadow: 0 0 12px rgba(0,238,255,0.25); background: rgba(0,238,255,0.08); overflow: hidden; }
+        .health-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; background: linear-gradient(180deg, #3bf7ff 0%, #00eaff 40%, #00b3cc 100%); box-shadow: inset 0 0 10px rgba(255,255,255,0.25); }
+        .fail-title { position: absolute; left: 50%; top: 22%; transform: translate(-50%, -50%) scale(1); font-family: 'Impact', sans-serif; font-size: 56px; font-weight: 900; color: #ff4d4f; -webkit-text-stroke: 3px #000; text-shadow: 0 6px 20px rgba(0,0,0,0.6); opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
         .score-box { font-size: 2rem; color: #fff; }
         .combo-box { 
             position: absolute; top: 30%; left: 50%; 
@@ -314,8 +339,15 @@
         }
         .combo-num { font-size: 4rem; color: #00d2ff; -webkit-text-stroke: 2px #000; }
         .combo-label { font-size: 1.2rem; letter-spacing: 4px; color: #fff; }
+        .combo-label { display: none; }
 
         input[type="file"] { display: none; }
+        .result-modal { position: absolute; left: 50%; top: -300px; transform: translateX(-50%); z-index: 30; transition: top 0.25s ease, opacity 0.25s ease; opacity: 0; }
+        .result-modal.show { top: 60px; opacity: 1; }
+        .result-card { min-width: 320px; padding: 16px 20px; border: 2px solid #0ef; border-radius: 16px; background: rgba(10,26,47,0.9); color: #c8f8ff; box-shadow: 0 0 20px rgba(0,238,255,0.25); }
+        .result-title { font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+        .result-row { font-size: 16px; padding: 4px 0; }
+        .result-close { margin-top: 10px; padding: 6px 12px; border: 1px solid #0ef; background: rgba(0,238,255,0.12); color: #c8f8ff; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -343,6 +375,10 @@
                 <div class="song-item" id="btn-sample">
                     <span>✨ 加载示例歌曲 (MingShen)</span>
                     <span class="time">02:15</span>
+                </div>
+                <div class="song-item" id="btn-autoplay">
+                    <span>🕹 自动演示</span>
+                    <span class="time">OFF</span>
                 </div>
                 <div class="song-item" style="opacity: 0.5; cursor: default;">
                     <span>🔒 更多歌曲开发中...</span>
@@ -386,9 +422,13 @@
 
                 <!-- Side Buttons -->
                 <div class="side-buttons">
-                    <div class="side-btn">
+                    <div class="side-btn" id="speed-control">
                         <span>速度</span>
-                        <span style="font-size: 16px;">2x</span>
+                        <div class="speed-ctrl">
+                            <button id="speed-dec" class="arrow-btn">◀</button>
+                            <span id="speed-val" style="font-size: 16px;">2x</span>
+                            <button id="speed-inc" class="arrow-btn">▶</button>
+                        </div>
                     </div>
                     <div class="side-btn">
                         <span>排序</span>
@@ -412,13 +452,26 @@
     <div id="game-container">
         <div id="game-hud">
             <div class="hud-top">
-                <div class="score-box" id="hud-score">000000</div>
-                <div class="score-box" id="hud-acc">100.00%</div>
+                <div class="score-box" id="hud-score">00000000</div>
             </div>
             <div class="combo-box" id="hud-combo-box">
                 <div class="combo-num" id="hud-combo">0</div>
                 <div class="combo-label">COMBO</div>
             </div>
+            <div class="health-bar" id="hud-health"><div class="health-fill" id="hud-health-fill"></div></div>
+            <div class="fail-title" id="fail-title">失败</div>
+        </div>
+        <button id="btn-exit" class="exit-btn">ESC</button>
+    </div>
+    <div id="result-modal" class="result-modal">
+        <div class="result-card">
+            <div class="result-title">结算</div>
+            <div class="result-row">COOL：<span id="result-cool">0</span></div>
+            <div class="result-row">GOOD：<span id="result-good">0</span></div>
+            <div class="result-row">BAD：<span id="result-bad">0</span></div>
+            <div class="result-row">MISS：<span id="result-miss">0</span></div>
+            <div class="result-row">MAX COMBO：<span id="result-maxcombo">0</span></div>
+            <button id="result-close" class="result-close">关闭</button>
         </div>
     </div>
 </div>
@@ -439,15 +492,16 @@
     // Let's check `game.js` content again.
     
     // Logic Binding
-    const el = {
-        selectView: document.getElementById('select-view'),
-        gameContainer: document.getElementById('game-container'),
-        btnBms: document.getElementById('btn-bms'),
-        btnAudio: document.getElementById('btn-audio'),
-        btnSample: document.getElementById('btn-sample'),
-        btnStart: document.getElementById('btn-start'),
-        inputBms: document.getElementById('input-bms'),
-        inputAudio: document.getElementById('input-audio'),
+        const el = {
+            selectView: document.getElementById('select-view'),
+            gameContainer: document.getElementById('game-container'),
+            btnBms: document.getElementById('btn-bms'),
+            btnAudio: document.getElementById('btn-audio'),
+            btnSample: document.getElementById('btn-sample'),
+            btnAutoplay: document.getElementById('btn-autoplay'),
+            btnStart: document.getElementById('btn-start'),
+            inputBms: document.getElementById('input-bms'),
+            inputAudio: document.getElementById('input-audio'),
         
         metaTitle: document.getElementById('meta-title'),
         metaArtist: document.getElementById('meta-artist'),
@@ -458,13 +512,31 @@
         
         bgm: document.getElementById('bgm')
     };
+    el.btnExit = document.getElementById('btn-exit');
 
-    const state = {
-        bmsText: null,
-        audioUrl: null,
-        chart: null,
-        ready: false
-    };
+    el.speedVal = document.getElementById('speed-val');
+    el.speedDec = document.getElementById('speed-dec');
+    el.speedInc = document.getElementById('speed-inc');
+
+        const state = {
+            bmsText: null,
+            audioUrl: null,
+            chart: null,
+            ready: false,
+            autoDemo: false
+        };
+
+    let selectSpeed = parseFloat(localStorage.getItem('o2_speed') || '2');
+    if (isNaN(selectSpeed)) selectSpeed = 2;
+
+    function updateSelectSpeed() {
+        const val = Number.isInteger(selectSpeed) ? selectSpeed.toFixed(0) : selectSpeed.toFixed(1);
+        if (el.speedVal) el.speedVal.textContent = `${val}x`;
+        localStorage.setItem('o2_speed', String(selectSpeed));
+    }
+    if (el.speedDec) el.speedDec.onclick = () => { selectSpeed = Math.max(1, selectSpeed - 0.5); updateSelectSpeed(); };
+    if (el.speedInc) el.speedInc.onclick = () => { selectSpeed = Math.min(10, selectSpeed + 0.5); updateSelectSpeed(); };
+    updateSelectSpeed();
 
     function updateReady() {
         state.ready = !!(state.bmsText && state.audioUrl);
@@ -546,6 +618,14 @@
     function resetListActive() {
         document.querySelectorAll('.song-item').forEach(d => d.classList.remove('active'));
     }
+    if (el.btnAutoplay) {
+        el.btnAutoplay.onclick = () => {
+            state.autoDemo = !state.autoDemo;
+            el.btnAutoplay.classList.toggle('active', state.autoDemo);
+            const t = el.btnAutoplay.querySelector('.time');
+            if (t) t.textContent = state.autoDemo ? 'ON' : 'OFF';
+        };
+    }
 
     // Start Game
     el.btnStart.onclick = async () => {
@@ -560,9 +640,39 @@
         if (!window.gameInstance) {
             window.gameInstance = new module.RhythmGame(el.gameContainer);
         }
+        window.gameInstance.speedMultiplier = selectSpeed;
+        window.gameInstance.autoDemo = state.autoDemo;
+        if (window.gameInstance.updateSpeedDisplay) window.gameInstance.updateSpeedDisplay();
         window.gameInstance.start(state.chart, state.audioUrl);
     };
+
+    if (el.btnExit) {
+        el.btnExit.onclick = () => {
+            if (window.gameInstance) window.gameInstance.stop();
+            el.gameContainer.classList.remove('active');
+            el.selectView.classList.remove('hidden');
+            const m = document.getElementById('result-modal');
+            if (window.gameInstance && window.gameInstance.lastResults && m) {
+                const r = window.gameInstance.lastResults;
+                const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = String(val); };
+                set('result-cool', r.cool);
+                set('result-good', r.good);
+                set('result-bad', r.bad);
+                set('result-miss', r.miss);
+                set('result-maxcombo', r.maxCombo);
+                m.classList.add('show');
+            }
+        };
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (el && el.btnExit) el.btnExit.click();
+        }
+    });
 
 </script>
 </body>
 </html>
+    const modal = document.getElementById('result-modal');
+    const btnClose = document.getElementById('result-close');
+    if (btnClose) btnClose.onclick = () => { if (modal) modal.classList.remove('show'); };

@@ -63,15 +63,21 @@ export class RhythmGame {
         this.stats = {
             combo: 0,
             score: 0,
-            perfect: 0,
-            great: 0,
+            cool: 0,
+            good: 0,
+            bad: 0,
             miss: 0,
-            maxCombo: 0
+            maxCombo: 0,
+            comboBonus: 0,
+            hp: 100
         };
         
         // Input
-        this.keys = { 'KeyD': 0, 'KeyF': 1, 'KeyJ': 2, 'KeyK': 3 };
+        this.keys = { 'KeyD': 3, 'KeyF': 0, 'KeyJ': 1, 'KeyK': 2 };
         this.heldLanes = [false, false, false, false];
+        this.laneColumn = [1, 2, 3, 0];
+        this.speedMultiplier = 1;
+        this.autoDemo = false;
         
         window.addEventListener('keydown', this.onKeyDown.bind(this));
         window.addEventListener('keyup', this.onKeyUp.bind(this));
@@ -98,6 +104,12 @@ export class RhythmGame {
             for(let i=0; i<=11; i++) {
                 const tex = await PIXI.Assets.load(`source/Flare${i}.png`);
                 this.textures.flares.push(tex);
+            }
+            this.textures.tCombo = await PIXI.Assets.load('source/ccombo.png');
+            this.textures.comboDigits = [];
+            for (let d = 0; d <= 9; d++) {
+                const dtex = await PIXI.Assets.load(`source/c${d}.png`);
+                this.textures.comboDigits.push(dtex);
             }
             
             this.assetsLoaded = true;
@@ -131,6 +143,28 @@ export class RhythmGame {
         this.offsetText.anchor.set(1, 0);
         this.offsetText.position.set(this.width - 20, 20);
         this.gameContainer.addChild(this.offsetText);
+        this.speedText = new PIXI.Text(`SPEED: x${this.speedMultiplier}`, {
+            fontFamily: 'Arial',
+            fontSize: 16,
+            fill: 0xffffff,
+            align: 'right',
+            dropShadow: true,
+            dropShadowColor: '#000000',
+            dropShadowBlur: 4,
+            dropShadowDistance: 2
+        });
+        this.speedText.anchor.set(1, 0);
+        this.speedText.position.set(this.width - 20, 44);
+        this.gameContainer.addChild(this.speedText);
+        this.comboSprite = new PIXI.Sprite(this.textures.tCombo || PIXI.Texture.EMPTY);
+        this.comboSprite.anchor.set(0.5, 0.5);
+        this.comboSprite.visible = false;
+        this.comboSprite.position.set(this.width / 2, this.height * 0.24);
+        this.effectsLayer.addChild(this.comboSprite);
+        this.comboDigits = new PIXI.Container();
+        this.comboDigits.visible = false;
+        this.comboDigits.position.set(this.width / 2, this.height * 0.30);
+        this.effectsLayer.addChild(this.comboDigits);
         
         this.drawLayout();
     }
@@ -177,14 +211,15 @@ export class RhythmGame {
             this.keyBeams.forEach(b => b.destroy());
         }
         this.keyBeams = [];
-        for(let i=0; i<4; i++) {
+        for(let lane=0; lane<4; lane++) {
+            const col = this.laneColumn[lane] ?? lane;
             const beam = new PIXI.Graphics();
             beam.beginFill(0xffffff, 0.15);
-            beam.drawRect(this.startX + i*this.LANE_WIDTH, 0, this.LANE_WIDTH, this.height);
+            beam.drawRect(this.startX + col*this.LANE_WIDTH, 0, this.LANE_WIDTH, this.height);
             beam.endFill();
             beam.visible = false;
-            this.gameContainer.addChildAt(beam, 1); // Behind notes
-            this.keyBeams.push(beam);
+            this.gameContainer.addChildAt(beam, 1);
+            this.keyBeams[lane] = beam;
         }
     }
     
@@ -193,14 +228,42 @@ export class RhythmGame {
         if (this.offsetText) {
             this.offsetText.position.set(this.app.screen.width - 20, 20);
         }
+        if (this.speedText) {
+            this.speedText.position.set(this.app.screen.width - 20, 44);
+        }
+        if (this.comboSprite) {
+            this.comboSprite.position.set(this.app.screen.width / 2, this.app.screen.height * 0.24);
+        }
+        if (this.comboDigits) {
+            this.comboDigits.position.set(this.app.screen.width / 2, this.app.screen.height * 0.30);
+        }
     }
     
     async start(chart, audioUrl) {
         // Reset
         this.notesLayer.removeChildren();
         this.effectsLayer.removeChildren();
-        this.stats = { combo: 0, score: 0, perfect: 0, great: 0, miss: 0, maxCombo: 0 };
+        this.stats = { combo: 0, score: 0, cool: 0, good: 0, bad: 0, miss: 0, maxCombo: 0, comboBonus: 0, hp: 100 };
+        if (this.comboSprite) {
+            this.comboSprite.visible = false;
+            this.effectsLayer.addChild(this.comboSprite);
+        }
+        if (this.comboDigits) {
+            this.comboDigits.visible = false;
+            this.comboDigits.scale.set(1);
+            this.comboDigits.removeChildren();
+            this.effectsLayer.addChild(this.comboDigits);
+        }
+        const failTitle = document.getElementById('fail-title');
+        if (failTitle) failTitle.style.opacity = 0;
         this.updateHUD();
+        const self = this;
+        if (this.audioSource) this.audioSource.onended = () => {
+            const r = { cool: self.stats.cool || 0, good: self.stats.good || 0, bad: self.stats.bad || 0, miss: self.stats.miss || 0, maxCombo: self.stats.maxCombo || 0 };
+            self.lastResults = r;
+            const btnExit = document.getElementById('btn-exit');
+            if (btnExit) btnExit.click();
+        };
         
         // Stop previous audio if any
         if (this.audioSource) {
@@ -253,8 +316,7 @@ export class RhythmGame {
         for (const note of this.runtimeNotes) {
             let tex = fallbackTex;
             if (this.assetsLoaded) {
-                // Lane 0,3 -> Note A; Lane 1,2 -> Note B
-                if (note.lane === 0 || note.lane === 3) tex = this.textures.noteA;
+                if (note.lane === 0 || note.lane === 1) tex = this.textures.noteA;
                 else tex = this.textures.noteB;
             }
             
@@ -348,9 +410,25 @@ export class RhythmGame {
         const now = this.audioContext.currentTime;
         const currentTime = now - this.audioStartTime + this.GLOBAL_OFFSET;
         
-        const scrollSpeed = this.height * 0.8; // Pixels per second
+        const scrollSpeed = this.height * 0.8 * this.speedMultiplier;
         
         for (const note of this.runtimeNotes) {
+            if (this.autoDemo && !note.hit && !note.missed) {
+                if (note.type === 'ln') {
+                    if (!note.isHolding && currentTime >= note.time) {
+                        note.isHolding = true;
+                        note.hitTime = currentTime;
+                        this.triggerHit('COOL', note.lane);
+                    }
+                } else if (note.type === 'tap') {
+                    if (Math.abs(note.time - currentTime) <= 0.03) {
+                        note.hit = true;
+                        this.triggerHit('COOL', note.lane);
+                        if (note.sprite) note.sprite.visible = false;
+                        continue;
+                    }
+                }
+            }
             // Special handling for Holding LNs:
             // If note.isHolding is true, the head should stick to the hit line, and the body should shrink
             if (note.type === 'ln' && note.isHolding && !note.hit && !note.missed) {
@@ -364,7 +442,7 @@ export class RhythmGame {
                     // Auto-hit tail if held until end (lenient)
                     note.hit = true;
                     note.isHolding = false;
-                    this.triggerHit('PERFECT', note.lane); // Tail judgment
+                    this.triggerHit('COOL', note.lane); // Tail judgment
                     
                     if (note.sprite) note.sprite.visible = false;
                     if (note.bodySprite) note.bodySprite.visible = false;
@@ -372,7 +450,7 @@ export class RhythmGame {
                 }
                 
                 // Render Holding State
-                const x = this.startX + note.lane * this.LANE_WIDTH + this.LANE_WIDTH / 2;
+                const x = this.startX + (this.laneColumn[note.lane] ?? note.lane) * this.LANE_WIDTH + this.LANE_WIDTH / 2;
                 const tailTimeDiff = (note.time + note.duration) - currentTime;
                 const tailY = this.HIT_Y - (tailTimeDiff * scrollSpeed);
                 
@@ -414,7 +492,7 @@ export class RhythmGame {
             // Render
             // Y = HitY - (TimeDiff * Speed)
             const y = this.HIT_Y - (timeDiff * scrollSpeed);
-            const x = this.startX + note.lane * this.LANE_WIDTH + this.LANE_WIDTH / 2;
+            const x = this.startX + (this.laneColumn[note.lane] ?? note.lane) * this.LANE_WIDTH + this.LANE_WIDTH / 2;
             
             // Visual effect for missed notes
             if (note.missed) {
@@ -467,6 +545,7 @@ export class RhythmGame {
             this.updateOffsetDisplay();
             return;
         }
+        
 
         if (this.keys[e.code] === undefined) return;
         
@@ -528,6 +607,61 @@ export class RhythmGame {
             this.offsetText.text = `OFFSET: ${ms >= 0 ? '+' : ''}${ms}ms`;
         }
     }
+    updateSpeedDisplay() {
+        if (this.speedText) {
+            const val = Number.isInteger(this.speedMultiplier) ? this.speedMultiplier.toFixed(0) : this.speedMultiplier.toFixed(1);
+            this.speedText.text = `SPEED: x${val}`;
+        }
+    }
+    updateComboDigits() {
+        if (!this.comboDigits || !this.textures.comboDigits) return;
+        const value = this.stats.combo;
+        if (value <= 0) { this.comboDigits.visible = false; return; }
+        const str = String(value);
+        this.comboDigits.removeChildren();
+        const sprites = [];
+        let totalW = 0;
+        const H = 128;
+        const F = 1.0;
+        for (const ch of str) {
+            const idx = parseInt(ch, 10);
+            const tex = this.textures.comboDigits[idx];
+            const spr = new PIXI.Sprite(tex);
+            spr.anchor.set(0.5, 0.5);
+            spr.height = H;
+            sprites.push(spr);
+            totalW += spr.width * F;
+        }
+        let x = -totalW / 2;
+        for (const spr of sprites) {
+            spr.position.set(x + (spr.width * F) / 2, 0);
+            this.comboDigits.addChild(spr);
+            x += spr.width * F;
+        }
+        this.comboDigits.visible = true;
+    }
+
+    bounceCombo() {
+        if (!this.comboDigits) return;
+        if (this.comboBounceTick) this.app.ticker.remove(this.comboBounceTick);
+        let t = 0;
+        const dur = 120;
+        const startScale = 1.3;
+        this.comboDigits.scale.set(startScale);
+        const fn = () => {
+            t += this.app.ticker.deltaMS;
+            const p = Math.min(1, t / dur);
+            const s = startScale - (startScale - 1) * p;
+            this.comboDigits.scale.set(s);
+            if (p >= 1) {
+                this.app.ticker.remove(fn);
+                this.comboBounceTick = null;
+            }
+        };
+        this.comboBounceTick = fn;
+        this.app.ticker.add(fn);
+    }
+    
 
     checkHit(lane) {
         // Use AudioContext time for judgment (Golden Rule)
@@ -550,13 +684,20 @@ export class RhythmGame {
         candidates.sort((a, b) => Math.abs(a.time - currentTime) - Math.abs(b.time - currentTime));
         const target = candidates[0];
         
-        const diff = Math.abs(target.time - currentTime);
-        
+        const offsetSec = currentTime - target.time; // + late, - early
+        const m = offsetSec * 1000;
         let judge = 'MISS';
-        if (diff <= 0.04) judge = 'PERFECT';
-        else if (diff <= 0.08) judge = 'GREAT';
-        else if (diff <= 0.12) judge = 'GOOD';
-        else judge = 'MISS'; // Should not happen given filter, but ok
+        if (m >= -50 && m <= 50) {
+            judge = 'COOL';
+        } else if ((m >= 51 && m <= 85) || (m >= -85 && m <= -51)) {
+            judge = 'GOOD';
+        } else if ((m >= 86 && m <= 108) || (m >= -108 && m <= -86)) {
+            judge = 'BAD';
+        } else if (m > 108) {
+            judge = 'MISS';
+        } else {
+            judge = 'MISS';
+        }
         
         if (judge !== 'MISS') {
             // If Tap Note, mark as hit immediately
@@ -572,18 +713,44 @@ export class RhythmGame {
                 // Note: We do NOT set target.hit = true yet, because we need to check tail
                 // We keep it visible but maybe change appearance?
             }
+        } else {
+            this.triggerMiss(target);
         }
     }
     
     triggerHit(judge, lane) {
-        this.stats.combo++;
-        if (this.stats.combo > this.stats.maxCombo) this.stats.maxCombo = this.stats.combo;
+        if (judge === 'BAD') {
+            this.stats.combo = 0;
+            this.stats.comboBonus = 0;
+        } else {
+            this.stats.combo++;
+            if (this.stats.combo > this.stats.maxCombo) this.stats.maxCombo = this.stats.combo;
+            if (this.stats.combo > 0 && this.stats.combo % 100 === 0) this.stats.comboBonus += 10;
+        }
         
-        if (judge === 'PERFECT') this.stats.score += 100;
-        if (judge === 'GREAT') this.stats.score += 50;
-        if (judge === 'GOOD') this.stats.score += 20;
+        const bonus = (judge === 'COOL' || judge === 'GOOD') ? this.stats.comboBonus : 0;
+        if (judge === 'COOL') this.stats.score += 100 + bonus;
+        if (judge === 'GOOD') this.stats.score += 80 + bonus;
+        if (judge === 'BAD') this.stats.score += 10;
+        if (judge === 'COOL') this.stats.cool++;
+        else if (judge === 'GOOD') this.stats.good++;
+        else if (judge === 'BAD') this.stats.bad++;
+        if (judge === 'COOL') this.stats.hp += 2;
+        else if (judge === 'GOOD') this.stats.hp += 1.5;
+        else if (judge === 'BAD') {/* no hp change */}
+        this.stats.hp = Math.max(0, Math.min(100, this.stats.hp));
+        if (this.stats.hp <= 0) {
+            const failTitle = document.getElementById('fail-title');
+            if (failTitle) failTitle.style.opacity = 1;
+            const btnExit = document.getElementById('btn-exit');
+            if (btnExit) btnExit.click();
+            return;
+        }
+        if (this.stats.score < 0) this.stats.score = 0;
         
         this.updateHUD();
+        if (judge !== 'BAD') this.bounceCombo();
+        this.showJudgeText(lane, judge);
         this.showHitEffect(lane, judge);
     }
     
@@ -591,16 +758,34 @@ export class RhythmGame {
         note.missed = true;
         this.stats.combo = 0;
         this.stats.miss++;
+        this.stats.comboBonus = 0;
+        this.stats.score -= 20;
+        this.stats.hp -= 4;
+        this.stats.hp = Math.max(0, Math.min(100, this.stats.hp));
+        if (this.stats.hp <= 0) {
+            const failTitle = document.getElementById('fail-title');
+            if (failTitle) failTitle.style.opacity = 1;
+            const btnExit = document.getElementById('btn-exit');
+            if (btnExit) btnExit.click();
+            return;
+        }
+        if (this.stats.score < 0) this.stats.score = 0;
         this.updateHUD();
+        this.showJudgeText(note.lane, 'MISS');
     }
     
     updateHUD() {
         const hudScore = document.getElementById('hud-score');
         const hudCombo = document.getElementById('hud-combo');
         const hudComboBox = document.getElementById('hud-combo-box');
+        const hudHealthFill = document.getElementById('hud-health-fill');
         
-        if(hudScore) hudScore.textContent = this.stats.score.toString().padStart(6, '0');
-        if(hudCombo) hudCombo.textContent = this.stats.combo;
+        if(hudScore) hudScore.textContent = this.stats.score.toString().padStart(8, '0');
+        if(hudHealthFill) {
+            const h = Math.max(0, Math.min(100, this.stats.hp ?? 100));
+            hudHealthFill.style.height = `${h}%`;
+        }
+        if(hudCombo) { hudCombo.textContent = this.stats.combo; hudCombo.style.display = 'none'; }
         
         // Acc calculation could be better but simple version:
         const total = this.stats.combo + this.stats.miss; // Only processed notes
@@ -614,40 +799,51 @@ export class RhythmGame {
             setTimeout(() => {
                 hudComboBox.style.transform = 'translate(-50%, -50%) scale(1)';
             }, 50);
+            this.updateComboDigits();
+            if (this.comboDigits) this.comboDigits.visible = true;
+            if (this.comboSprite) this.comboSprite.visible = true;
         } else {
             hudComboBox.style.opacity = 0;
+            if (this.comboDigits) this.comboDigits.visible = false;
+            if (this.comboSprite) this.comboSprite.visible = false;
         }
     }
     
     showHitEffect(lane, judge) {
-        const x = this.startX + lane * this.LANE_WIDTH + this.LANE_WIDTH/2;
+        const x = this.startX + (this.laneColumn[lane] ?? lane) * this.LANE_WIDTH + this.LANE_WIDTH/2;
         const y = this.HIT_Y;
         
         if (this.assetsLoaded && this.textures.flares && this.textures.flares.length > 0) {
-            // Use Animated Sprite
-            const anim = new PIXI.AnimatedSprite(this.textures.flares);
-            anim.anchor.set(0.5, 0.5);
-            anim.position.set(x, y);
-            anim.animationSpeed = 0.5; // Adjust speed
-            anim.loop = false;
-            anim.width = 120;
-            anim.height = 120;
-            anim.blendMode = PIXI.BLEND_MODES.ADD;
-            
-            anim.onComplete = () => {
-                this.effectsLayer.removeChild(anim);
-                anim.destroy();
+            const spr = new PIXI.Sprite(this.textures.flares[0]);
+            spr.anchor.set(0.5, 0.5);
+            spr.position.set(x, y);
+            spr.width = 240;
+            spr.height = 240;
+            spr.blendMode = PIXI.BLEND_MODES.ADD;
+            this.effectsLayer.addChild(spr);
+            let idx = 0;
+            let acc = 0;
+            const step = () => {
+                acc += this.app.ticker.deltaMS;
+                if (acc >= 20) {
+                    acc -= 20;
+                    idx++;
+                    if (idx >= this.textures.flares.length) {
+                        this.effectsLayer.removeChild(spr);
+                        spr.destroy();
+                        this.app.ticker.remove(step);
+                    } else {
+                        spr.texture = this.textures.flares[idx];
+                    }
+                }
             };
-            
-            this.effectsLayer.addChild(anim);
-            anim.play();
-            
+            this.app.ticker.add(step);
         } else {
             // Fallback Graphics
             const circle = new PIXI.Graphics();
-            const color = judge === 'PERFECT' ? 0xFFD700 : (judge === 'GREAT' ? 0x00FF00 : 0x00FFFF);
+            const color = judge === 'COOL' ? 0x00FFFF : (judge === 'GOOD' ? 0x00FF00 : (judge === 'BAD' ? 0xFFA500 : 0x808080));
             circle.beginFill(color, 0.6);
-            circle.drawCircle(0, 0, 40);
+            circle.drawCircle(0, 0, 80);
             circle.endFill();
             circle.position.set(x, y);
             circle.blendMode = PIXI.BLEND_MODES.ADD;
@@ -667,5 +863,70 @@ export class RhythmGame {
             };
             this.app.ticker.add(animate);
         }
+    }
+
+    showJudgeText(lane, judge) {
+        const x = this.startX + (this.laneColumn[lane] ?? lane) * this.LANE_WIDTH + this.LANE_WIDTH/2;
+        const y = this.HIT_Y - 60;
+        let color = 0xffffff;
+        if (judge === 'COOL') color = 0x00ffff;
+        else if (judge === 'GOOD') color = 0x00ff00;
+        else if (judge === 'BAD') color = 0xffa500;
+        else if (judge === 'MISS') color = 0x808080;
+        const txt = new PIXI.Text(judge, {
+            fontFamily: 'Impact',
+            fontSize: 48,
+            fill: color,
+            stroke: '#000000',
+            strokeThickness: 4,
+            dropShadow: true,
+            dropShadowColor: '#000000',
+            dropShadowBlur: 4,
+            dropShadowDistance: 2
+        });
+        txt.anchor.set(0.5, 0.5);
+        txt.position.set(x, y);
+        this.effectsLayer.addChild(txt);
+        let t = 0;
+        const dur = 400;
+        const fn = () => {
+            t += this.app.ticker.deltaMS;
+            const p = Math.min(1, t / dur);
+            txt.position.y = y - 20 * p;
+            txt.alpha = 1 - p;
+            if (p >= 1) {
+                this.effectsLayer.removeChild(txt);
+                txt.destroy();
+                this.app.ticker.remove(fn);
+            }
+        };
+        this.app.ticker.add(fn);
+    }
+
+    stop() {
+        if (this.audioSource) {
+            try { this.audioSource.stop(); } catch(e) {}
+            this.audioSource = null;
+        }
+        if (this.audioContext && this.audioContext.state !== 'suspended') {
+            try { this.audioContext.suspend(); } catch(e) {}
+        }
+        this.isPlaying = false;
+        this.app.ticker.remove(this.update, this);
+        if (this.notesLayer) this.notesLayer.removeChildren();
+        if (this.effectsLayer) this.effectsLayer.removeChildren();
+        this.heldLanes = [false, false, false, false];
+        if (this.keyBeams) this.keyBeams.forEach(b => { if (b) b.visible = false; });
+        this.stats = { combo: 0, score: 0, cool: 0, good: 0, bad: 0, miss: 0, maxCombo: 0, comboBonus: 0, hp: 100 };
+        if (this.comboDigits) {
+            this.comboDigits.visible = false;
+            this.comboDigits.removeChildren();
+            this.comboDigits.scale.set(1);
+        }
+        if (this.comboSprite) this.comboSprite.visible = false;
+        if (this.comboBounceTick) { this.app.ticker.remove(this.comboBounceTick); this.comboBounceTick = null; }
+        const failTitle = document.getElementById('fail-title');
+        if (failTitle) failTitle.style.opacity = 0;
+        this.updateHUD();
     }
 }
