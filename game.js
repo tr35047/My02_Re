@@ -20,14 +20,23 @@ export class RhythmGame {
             resolution: window.devicePixelRatio || 1
         });
         container.appendChild(this.app.view);
+        try {
+            this._resizeObserver = new ResizeObserver(() => {
+                this.width = this.app.screen.width;
+                this.height = this.app.screen.height;
+                this.HIT_Y = this.height - 150;
+                this.onResize();
+            });
+            this._resizeObserver.observe(container);
+        } catch(e) {}
         
         this.width = this.app.screen.width;
         this.height = this.app.screen.height;
         
         // Constants
         this.LANE_COUNT = 4;
-        this.LANE_WIDTH = 82; // Adjusted for MyO2 skin ratio (328px total width / 4)
-        this.HIT_Y = this.height * 0.85;
+        this.LANE_WIDTH = 115; // Adjusted for 460px total width
+        this.HIT_Y = this.height - 150;
         this.SPEED = 1.5; 
         this.OFFSET = 0.0; // Reset to 0, using AudioContext logic for precision
         this.GLOBAL_OFFSET = 0.0; // Reset to 0 as we implemented proper BGM delay
@@ -40,12 +49,25 @@ export class RhythmGame {
 
         // Layers
         this.stage = this.app.stage;
+        
+        // Background Layer
+        this.bgSprite = new PIXI.Sprite();
+        this.bgSprite.anchor.set(0.5, 0.5);
+        this.stage.addChild(this.bgSprite);
+
         this.gameContainer = new PIXI.Container();
         this.stage.addChild(this.gameContainer);
         
+        // Internal Layers for proper Z-indexing
+        this.laneLayer = new PIXI.Container();
+        this.judgeLayer = new PIXI.Container();
+        this.keyLayer = new PIXI.Container();
         this.notesLayer = new PIXI.Container();
         this.effectsLayer = new PIXI.Container();
         
+        this.gameContainer.addChild(this.laneLayer);
+        this.gameContainer.addChild(this.judgeLayer);
+        this.gameContainer.addChild(this.keyLayer);
         this.gameContainer.addChild(this.notesLayer);
         this.gameContainer.addChild(this.effectsLayer);
         
@@ -88,16 +110,38 @@ export class RhythmGame {
     
     async loadAssets() {
         try {
-            // Load Main Atlas
-            const mainTex = await PIXI.Assets.load('source/main.png');
+            // Load individual textures from source folder
+            this.textures.bg = await PIXI.Assets.load('source/BG2.png');
+            this.textures.note1 = await PIXI.Assets.load('source/note1.png');
+            this.textures.note2 = await PIXI.Assets.load('source/note2.png');
+            this.textures.ln1 = await PIXI.Assets.load('source/ln1.png');
+            this.textures.ln2 = await PIXI.Assets.load('source/ln2.png');
             
-            // Slice Textures based on Skin XML analysis
-            // Note Type A (Lanes 0, 3 - Outer)
-            this.textures.noteA = new PIXI.Texture(mainTex.baseTexture, new PIXI.Rectangle(226, 143, 46, 15));
-            // Note Type B (Lanes 1, 2 - Inner)
-            this.textures.noteB = new PIXI.Texture(mainTex.baseTexture, new PIXI.Rectangle(225, 160, 48, 15));
-            // Judge Line Bar
-            this.textures.judgeBar = new PIXI.Texture(mainTex.baseTexture, new PIXI.Rectangle(136, 275, 328, 23));
+            // Assign textures based on lane type
+            // Outer lanes (0, 3) use note1/ln1
+            // Inner lanes (1, 2) use note2/ln2
+            this.textures.noteA = this.textures.note1;
+            this.textures.noteB = this.textures.note2;
+            this.textures.lnA = this.textures.ln1;
+            this.textures.lnB = this.textures.ln2;
+
+            // Judge Line Image
+            this.textures.judgeLine = await PIXI.Assets.load('source/pd.png');
+            
+            // Key Press Images
+            this.textures.keys = [];
+            for(let i=1; i<=4; i++) {
+                const tex = await PIXI.Assets.load(`source/key${i}.png`);
+                this.textures.keys.push(tex);
+            }
+
+            // Judgment Images
+            this.textures.judgments = {
+                cool: await PIXI.Assets.load('source/cool.png'),
+                good: await PIXI.Assets.load('source/good.png'),
+                bad: await PIXI.Assets.load('source/bad.png'),
+                miss: await PIXI.Assets.load('source/miss.png')
+            };
             
             // Load Flare Animation
             this.textures.flares = [];
@@ -105,7 +149,8 @@ export class RhythmGame {
                 const tex = await PIXI.Assets.load(`source/Flare${i}.png`);
                 this.textures.flares.push(tex);
             }
-            this.textures.tCombo = await PIXI.Assets.load('source/ccombo.png');
+            
+            // Combo Digits
             this.textures.comboDigits = [];
             for (let d = 0; d <= 9; d++) {
                 const dtex = await PIXI.Assets.load(`source/c${d}.png`);
@@ -120,15 +165,30 @@ export class RhythmGame {
     }
 
     initGraphics() {
+        // Background
+        if (this.assetsLoaded && this.textures.bg) {
+            this.bgSprite.texture = this.textures.bg;
+        }
+
         // Create Lane Backgrounds
         this.laneGraphics = new PIXI.Graphics();
-        this.gameContainer.addChildAt(this.laneGraphics, 0);
+        this.laneLayer.addChild(this.laneGraphics);
         
         // Judge Line Sprite (Placeholder until loaded)
         this.judgeSprite = new PIXI.Sprite();
         this.judgeSprite.anchor.set(0.5, 0.5);
-        this.gameContainer.addChildAt(this.judgeSprite, 1);
+        this.judgeLayer.addChild(this.judgeSprite);
         
+        // Key Press Sprites (replacing keyBeams)
+        this.keySprites = [];
+        for(let lane=0; lane<4; lane++) {
+            const spr = new PIXI.Sprite();
+            spr.anchor.set(0.5, 1); // Anchor at bottom center
+            spr.visible = false;
+            this.keyLayer.addChild(spr); 
+            this.keySprites[lane] = spr;
+        }
+
         // Offset Display
         this.offsetText = new PIXI.Text(`OFFSET: +${Math.round(this.GLOBAL_OFFSET * 1000)}ms`, {
             fontFamily: 'Arial',
@@ -172,18 +232,34 @@ export class RhythmGame {
     drawLayout() {
         this.width = this.app.screen.width;
         this.height = this.app.screen.height;
-        this.HIT_Y = this.height * 0.85;
+        this.HIT_Y = this.height - 150;
         
+        // Background Scaling (Cover)
+        if (this.bgSprite.texture && this.bgSprite.texture !== PIXI.Texture.EMPTY) {
+            const bgRatio = this.bgSprite.texture.width / this.bgSprite.texture.height;
+            const screenRatio = this.width / this.height;
+            
+            let scale = 1;
+            if (screenRatio > bgRatio) {
+                scale = this.width / this.bgSprite.texture.width;
+            } else {
+                scale = this.height / this.bgSprite.texture.height;
+            }
+            this.bgSprite.scale.set(scale);
+            this.bgSprite.position.set(this.width / 2, this.height / 2);
+        }
+
         const totalW = this.LANE_COUNT * this.LANE_WIDTH;
         this.startX = (this.width - totalW) / 2;
         
         this.laneGraphics.clear();
-        this.laneGraphics.beginFill(0x000000, 0.8); // Darker background
-        this.laneGraphics.drawRect(this.startX, 0, totalW, this.height);
-        this.laneGraphics.endFill();
+        // Remove dark background to show BG
+        // this.laneGraphics.beginFill(0x000000, 0.8); 
+        // this.laneGraphics.drawRect(this.startX, 0, totalW, this.height);
+        // this.laneGraphics.endFill();
         
-        // Dividers
-        this.laneGraphics.lineStyle(2, 0x333333);
+        // Dividers only (and maybe a very light tint if needed, or just lines)
+        this.laneGraphics.lineStyle(2, 0xffffff, 0.3); // White dividers, low alpha
         for (let i = 0; i <= this.LANE_COUNT; i++) {
             const x = this.startX + i * this.LANE_WIDTH;
             this.laneGraphics.moveTo(x, 0);
@@ -191,10 +267,10 @@ export class RhythmGame {
         }
         
         // Judge Line
-        if (this.assetsLoaded && this.textures.judgeBar) {
-            this.judgeSprite.texture = this.textures.judgeBar;
-            this.judgeSprite.width = totalW + 10; // Slightly wider
-            this.judgeSprite.height = 30;
+        if (this.assetsLoaded && this.textures.judgeLine) {
+            this.judgeSprite.texture = this.textures.judgeLine;
+            this.judgeSprite.width = totalW;
+            this.judgeSprite.scale.y = this.judgeSprite.scale.x; // Keep aspect ratio
             this.judgeSprite.position.set(this.width / 2, this.HIT_Y);
         } else {
             // Fallback
@@ -206,24 +282,45 @@ export class RhythmGame {
             this.judgeSprite.position.set(this.width / 2, this.HIT_Y);
         }
         
-        // Key beams (pressed state)
+        // Key beams (pressed state) -> Replaced by Key Images
         if (this.keyBeams) {
             this.keyBeams.forEach(b => b.destroy());
         }
-        this.keyBeams = [];
-        for(let lane=0; lane<4; lane++) {
-            const col = this.laneColumn[lane] ?? lane;
-            const beam = new PIXI.Graphics();
-            beam.beginFill(0xffffff, 0.15);
-            beam.drawRect(this.startX + col*this.LANE_WIDTH, 0, this.LANE_WIDTH, this.height);
-            beam.endFill();
-            beam.visible = false;
-            this.gameContainer.addChildAt(beam, 1);
-            this.keyBeams[lane] = beam;
+        this.keyBeams = []; // Keep array but empty to avoid errors if referenced
+
+        // Setup Key Sprites
+        if (this.assetsLoaded && this.textures.keys) {
+            for(let lane=0; lane<4; lane++) {
+                const col = this.laneColumn[lane] ?? lane;
+                const spr = this.keySprites[lane];
+                if (spr) {
+                    // Map lane to key texture: 
+                    // Lane 0 -> key1
+                    // Lane 1 -> key2
+                    // Lane 2 -> key3
+                    // Lane 3 -> key4
+                    // Or maybe symmetric? Usually 4k is 1-2-2-1 or 1-2-3-4. 
+                    // Looking at file names key1..4, let's assume 1=LeftOuter, 2=LeftInner, 3=RightInner, 4=RightOuter
+                    // Lane 0: key1, Lane 1: key2, Lane 2: key3, Lane 3: key4
+                    const texIndex = lane; // 0..3
+                    if (this.textures.keys[texIndex]) {
+                        spr.texture = this.textures.keys[texIndex];
+                        spr.width = this.LANE_WIDTH;
+                        spr.scale.y = spr.scale.x; // Maintain aspect
+                        spr.position.set(
+                            this.startX + col * this.LANE_WIDTH + this.LANE_WIDTH/2, 
+                            this.HIT_Y + 15 // Slightly below hit line
+                        );
+                    }
+                }
+            }
         }
     }
     
     onResize() {
+        this.width = this.app.screen.width;
+        this.height = this.app.screen.height;
+        this.HIT_Y = this.height - 150;
         this.drawLayout();
         if (this.offsetText) {
             this.offsetText.position.set(this.app.screen.width - 20, 20);
@@ -314,35 +411,49 @@ export class RhythmGame {
         const fallbackTex = this.createNoteTexture();
         
         for (const note of this.runtimeNotes) {
-            let tex = fallbackTex;
+            let noteTex = fallbackTex;
+            let bodyTex = fallbackTex;
             if (this.assetsLoaded) {
-                if (note.lane === 0 || note.lane === 1) tex = this.textures.noteA;
-                else tex = this.textures.noteB;
+                if (note.lane === 0 || note.lane === 3) {
+                     noteTex = this.textures.noteA;
+                     bodyTex = this.textures.lnA;
+                } else {
+                     noteTex = this.textures.noteB;
+                     bodyTex = this.textures.lnB;
+                }
             }
             
             if (note.type === 'tap') {
-                const spr = new PIXI.Sprite(tex);
+                const spr = new PIXI.Sprite(noteTex);
                 spr.anchor.set(0.5, 0.5);
                 spr.width = this.LANE_WIDTH; // Full width
-                spr.height = 24; // Taller
+                spr.scale.y = spr.scale.x; // Maintain aspect ratio for notes
                 spr.visible = false; // Hide initially
                 this.notesLayer.addChild(spr);
                 note.sprite = spr;
             } else if (note.type === 'ln') {
                 // Head
-                const spr = new PIXI.Sprite(tex);
+                const spr = new PIXI.Sprite(noteTex);
                 spr.anchor.set(0.5, 0.5);
                 spr.width = this.LANE_WIDTH;
-                spr.height = 24;
+                spr.scale.y = spr.scale.x; // Maintain aspect ratio for LN head
                 spr.visible = false;
                 this.notesLayer.addChild(spr);
                 note.sprite = spr;
+
+                // Tail
+                const tailSpr = new PIXI.Sprite(noteTex);
+                tailSpr.anchor.set(0.5, 0.5);
+                tailSpr.width = this.LANE_WIDTH;
+                tailSpr.scale.y = tailSpr.scale.x;
+                tailSpr.visible = false;
+                this.notesLayer.addChild(tailSpr);
+                note.tailSprite = tailSpr;
                 
                 // Body
-                const body = new PIXI.Graphics();
-                body.beginFill(0xffffff, 0.7); // White-ish body
-                body.drawRect(-this.LANE_WIDTH * 0.4, 0, this.LANE_WIDTH * 0.8, 1); 
-                body.endFill();
+                const body = new PIXI.Sprite(bodyTex);
+                body.anchor.set(0.5, 0); // Top-center
+                body.width = this.LANE_WIDTH;
                 body.visible = false;
                 this.notesLayer.addChild(body); 
                 this.notesLayer.setChildIndex(body, 0); 
@@ -446,6 +557,7 @@ export class RhythmGame {
                     
                     if (note.sprite) note.sprite.visible = false;
                     if (note.bodySprite) note.bodySprite.visible = false;
+                    if (note.tailSprite) note.tailSprite.visible = false;
                     continue;
                 }
                 
@@ -458,6 +570,11 @@ export class RhythmGame {
                 if (note.sprite) {
                     note.sprite.position.set(x, this.HIT_Y);
                     note.sprite.visible = true;
+                }
+
+                if (note.tailSprite) {
+                    note.tailSprite.position.set(x, tailY);
+                    note.tailSprite.visible = true;
                 }
                 
                 // Body from Hit Line to Tail
@@ -473,6 +590,7 @@ export class RhythmGame {
             if (note.hit) {
                 if (note.sprite) note.sprite.visible = false;
                 if (note.bodySprite) note.bodySprite.visible = false;
+                if (note.tailSprite) note.tailSprite.visible = false;
                 continue;
             }
             
@@ -498,6 +616,7 @@ export class RhythmGame {
             if (note.missed) {
                 if (note.sprite) note.sprite.alpha = 0.5;
                 if (note.bodySprite) note.bodySprite.alpha = 0.5;
+                if (note.tailSprite) note.tailSprite.alpha = 0.5;
             }
             
             // Calculate top edge for off-screen check
@@ -509,6 +628,7 @@ export class RhythmGame {
             if (topY > this.height + 100) {
                  if (note.sprite) note.sprite.visible = false;
                  if (note.bodySprite) note.bodySprite.visible = false;
+                 if (note.tailSprite) note.tailSprite.visible = false;
             } else if (y < -500) { 
                  if (note.sprite) note.sprite.visible = false;
             } else {
@@ -522,6 +642,11 @@ export class RhythmGame {
                     note.sprite.position.set(x, y); 
                     note.sprite.visible = true;
                     
+                    if (note.tailSprite) {
+                        note.tailSprite.position.set(x, tailY);
+                        note.tailSprite.visible = true;
+                    }
+
                     const bodyLen = y - tailY;
                     note.bodySprite.position.set(x, tailY);
                     note.bodySprite.height = bodyLen;
@@ -551,7 +676,11 @@ export class RhythmGame {
         
         const lane = this.keys[e.code];
         this.heldLanes[lane] = true;
-        this.keyBeams[lane].visible = true;
+        
+        // Show Key Sprite
+        if (this.keySprites && this.keySprites[lane]) {
+            this.keySprites[lane].visible = true;
+        }
         
         this.checkHit(lane);
     }
@@ -560,7 +689,11 @@ export class RhythmGame {
         if (this.keys[e.code] === undefined) return;
         const lane = this.keys[e.code];
         this.heldLanes[lane] = false;
-        this.keyBeams[lane].visible = false;
+        
+        // Hide Key Sprite
+        if (this.keySprites && this.keySprites[lane]) {
+            this.keySprites[lane].visible = false;
+        }
         
         // Handle LN Release
         this.checkLNRelease(lane);
@@ -725,7 +858,7 @@ export class RhythmGame {
         } else {
             this.stats.combo++;
             if (this.stats.combo > this.stats.maxCombo) this.stats.maxCombo = this.stats.combo;
-            if (this.stats.combo > 0 && this.stats.combo % 100 === 0) this.stats.comboBonus += 10;
+            if (this.stats.combo > 0 && this.stats.combo % 25 === 0) this.stats.comboBonus += 10;
         }
         
         const bonus = (judge === 'COOL' || judge === 'GOOD') ? this.stats.comboBonus : 0;
@@ -792,20 +925,35 @@ export class RhythmGame {
         // This is wrong, combo resets. We need total hits.
         // But for now it's fine.
         
-        // Animate Combo Box
-        if (this.stats.combo > 0) {
-            hudComboBox.style.opacity = 1;
-            hudComboBox.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            setTimeout(() => {
-                hudComboBox.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, 50);
-            this.updateComboDigits();
-            if (this.comboDigits) this.comboDigits.visible = true;
-            if (this.comboSprite) this.comboSprite.visible = true;
-        } else {
-            hudComboBox.style.opacity = 0;
-            if (this.comboDigits) this.comboDigits.visible = false;
-            if (this.comboSprite) this.comboSprite.visible = false;
+        // Update Combo Digits
+        if (this.comboDigits) {
+            this.comboDigits.removeChildren();
+            if (this.stats.combo > 0) {
+                const str = this.stats.combo.toString();
+                const totalWidth = str.length * 40; // Approx width
+                let startX = -totalWidth / 2;
+                
+                for (let i = 0; i < str.length; i++) {
+                    const digit = parseInt(str[i]);
+                    if (this.textures.comboDigits && this.textures.comboDigits[digit]) {
+                        const s = new PIXI.Sprite(this.textures.comboDigits[digit]);
+                        s.x = startX + i * 40;
+                        s.y = 0;
+                        s.scale.set(0.8); // Adjust scale
+                        this.comboDigits.addChild(s);
+                    }
+                }
+                this.comboDigits.visible = true;
+                this.comboSprite.visible = true;
+                
+                // Pulse effect
+                this.comboDigits.scale.set(1.2);
+                // We need a ticker for this specific tween or just use a simple decay in update loop
+                // For now, just let it be static or simple logic
+            } else {
+                this.comboDigits.visible = false;
+                this.comboSprite.visible = false;
+            }
         }
     }
     
@@ -866,41 +1014,80 @@ export class RhythmGame {
     }
 
     showJudgeText(lane, judge) {
-        const x = this.startX + (this.laneColumn[lane] ?? lane) * this.LANE_WIDTH + this.LANE_WIDTH/2;
-        const y = this.HIT_Y - 60;
-        let color = 0xffffff;
-        if (judge === 'COOL') color = 0x00ffff;
-        else if (judge === 'GOOD') color = 0x00ff00;
-        else if (judge === 'BAD') color = 0xffa500;
-        else if (judge === 'MISS') color = 0x808080;
-        const txt = new PIXI.Text(judge, {
-            fontFamily: 'Impact',
-            fontSize: 48,
-            fill: color,
-            stroke: '#000000',
-            strokeThickness: 4,
-            dropShadow: true,
-            dropShadowColor: '#000000',
-            dropShadowBlur: 4,
-            dropShadowDistance: 2
-        });
-        txt.anchor.set(0.5, 0.5);
-        txt.position.set(x, y);
-        this.effectsLayer.addChild(txt);
-        let t = 0;
-        const dur = 400;
-        const fn = () => {
-            t += this.app.ticker.deltaMS;
-            const p = Math.min(1, t / dur);
-            txt.position.y = y - 20 * p;
-            txt.alpha = 1 - p;
-            if (p >= 1) {
-                this.effectsLayer.removeChild(txt);
-                txt.destroy();
-                this.app.ticker.remove(fn);
-            }
-        };
-        this.app.ticker.add(fn);
+        // Use Sprite for Image Judgment
+        const tex = this.textures.judgments ? this.textures.judgments[judge.toLowerCase()] : null;
+        
+        if (tex) {
+            const sprite = new PIXI.Sprite(tex);
+            sprite.anchor.set(0.5, 0.5);
+            sprite.position.set(this.width / 2, this.HIT_Y - 100);
+            sprite.scale.set(0.8); // Initial scale
+            sprite.alpha = 0;
+            
+            this.effectsLayer.addChild(sprite);
+            
+            // Animation
+            let t = 0;
+            const animate = () => {
+                t += 0.05;
+                if (t < 0.2) {
+                    // Fade in and scale up
+                    sprite.alpha = t * 5;
+                    sprite.scale.set(0.8 + t);
+                } else if (t < 0.8) {
+                    // Hold
+                    sprite.alpha = 1;
+                    sprite.scale.set(1);
+                } else {
+                    // Fade out
+                    sprite.alpha = 1 - (t - 0.8) * 2;
+                }
+                
+                if (t >= 1.3) {
+                    this.app.ticker.remove(animate);
+                    sprite.destroy();
+                }
+            };
+            this.app.ticker.add(animate);
+            
+        } else {
+            // Fallback text
+            const style = {
+                fontFamily: 'Arial',
+                fontSize: 36,
+                fontWeight: 'bold',
+                fill: '#ffffff',
+                stroke: '#000000',
+                strokeThickness: 4,
+                dropShadow: true,
+                dropShadowBlur: 4,
+                dropShadowDistance: 2,
+            };
+            
+            if (judge === 'COOL') style.fill = '#00ffff';
+            else if (judge === 'GOOD') style.fill = '#00ff00';
+            else if (judge === 'BAD') style.fill = '#ffaa00';
+            else if (judge === 'MISS') style.fill = '#ff0000';
+            
+            const text = new PIXI.Text(judge, style);
+            text.anchor.set(0.5, 0.5);
+            text.position.set(this.width / 2, this.HIT_Y - 100);
+            
+            this.effectsLayer.addChild(text);
+            
+            // Simple tween
+            let t = 0;
+            const animate = () => {
+                t += 0.02;
+                text.position.y -= 0.5;
+                text.alpha = 1 - t;
+                if (text.alpha <= 0) {
+                    this.app.ticker.remove(animate);
+                    text.destroy();
+                }
+            };
+            this.app.ticker.add(animate);
+        }
     }
 
     stop() {

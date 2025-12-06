@@ -34,7 +34,7 @@
 
         /* --- Selection Screen (MyO2 Style) --- */
         #select-view {
-            position: absolute;
+            position: fixed;
             inset: 0;
             display: flex;
             align-items: center;
@@ -294,10 +294,14 @@
 
         /* Game Container */
         #game-container {
-            position: absolute;
+            position: fixed;
             inset: 0;
             z-index: 5;
-            background: #000;
+            background-color: #000;
+            background-image: url('source/BG2.PNG');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s;
@@ -373,8 +377,8 @@
                     <span class="time">--:--</span>
                 </div>
                 <div class="song-item" id="btn-sample">
-                    <span>✨ 加载示例歌曲 (MingShen)</span>
-                    <span class="time">02:15</span>
+                    <span>✨ 加载示例歌曲 (Yaranaika)</span>
+                    <span class="time">--:--</span>
                 </div>
                 <div class="song-item" id="btn-autoplay">
                     <span>🕹 自动演示</span>
@@ -597,18 +601,18 @@
         
         try {
             // Load BMS
-            const r1 = await fetch('MINGSHEN.bms');
+            const r1 = await fetch('4K.bms');
             if (!r1.ok) throw new Error('BMS Missing');
             state.bmsText = await r1.text();
             
             // Load Audio
-            state.audioUrl = 'Laur - NS.mp3';
+            state.audioUrl = 'cut.mp3';
             el.bgm.src = state.audioUrl;
             
             const parser = new BMSParser(state.bmsText);
             state.chart = parser.parse();
             
-            el.metaFilename.textContent = 'MINGSHEN.bms (Sample)';
+            el.metaFilename.textContent = '4K.bms (Sample)';
             updateReady();
         } catch (e) {
             alert('示例文件加载失败: ' + e.message);
