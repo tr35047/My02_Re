@@ -24,7 +24,7 @@ export class RhythmGame {
             this._resizeObserver = new ResizeObserver(() => {
                 this.width = this.app.screen.width;
                 this.height = this.app.screen.height;
-                this.HIT_Y = this.height - 150;
+                this.HIT_Y = this.height - 108;
                 this.onResize();
             });
             this._resizeObserver.observe(container);
@@ -35,8 +35,8 @@ export class RhythmGame {
         
         // Constants
         this.LANE_COUNT = 4;
-        this.LANE_WIDTH = 115; // Adjusted for 460px total width
-        this.HIT_Y = this.height - 150;
+        this.LANE_WIDTH = 333 / 4; // Adjusted for 333px total width
+        this.HIT_Y = this.height - 108; // Moved down by 42px (was -150)
         this.SPEED = 1.5; 
         this.OFFSET = 0.0; // Reset to 0, using AudioContext logic for precision
         this.GLOBAL_OFFSET = 0.0; // Reset to 0 as we implemented proper BGM delay
@@ -125,15 +125,17 @@ export class RhythmGame {
             this.textures.lnA = this.textures.ln1;
             this.textures.lnB = this.textures.ln2;
 
-            // Judge Line Image
-            this.textures.judgeLine = await PIXI.Assets.load('source/pd.png');
+            // Judge Line Image (Removed)
+            // this.textures.judgeLine = await PIXI.Assets.load('source/pd.png');
             
-            // Key Press Images
-            this.textures.keys = [];
+            // Key Press Images (Removed)
+            // this.textures.keys = [];
+            /*
             for(let i=1; i<=4; i++) {
                 const tex = await PIXI.Assets.load(`source/key${i}.png`);
                 this.textures.keys.push(tex);
             }
+            */
 
             // Judgment Images
             this.textures.judgments = {
@@ -177,10 +179,12 @@ export class RhythmGame {
         // Judge Line Sprite (Placeholder until loaded)
         this.judgeSprite = new PIXI.Sprite();
         this.judgeSprite.anchor.set(0.5, 0.5);
+        this.judgeSprite.visible = false; // Hidden as requested
         this.judgeLayer.addChild(this.judgeSprite);
         
-        // Key Press Sprites (replacing keyBeams)
+        // Key Press Sprites (Removed)
         this.keySprites = [];
+        /*
         for(let lane=0; lane<4; lane++) {
             const spr = new PIXI.Sprite();
             spr.anchor.set(0.5, 1); // Anchor at bottom center
@@ -188,6 +192,7 @@ export class RhythmGame {
             this.keyLayer.addChild(spr); 
             this.keySprites[lane] = spr;
         }
+        */
 
         // Offset Display
         this.offsetText = new PIXI.Text(`OFFSET: +${Math.round(this.GLOBAL_OFFSET * 1000)}ms`, {
@@ -232,21 +237,23 @@ export class RhythmGame {
     drawLayout() {
         this.width = this.app.screen.width;
         this.height = this.app.screen.height;
-        this.HIT_Y = this.height - 150;
+        this.HIT_Y = this.height - 108;
         
-        // Background Scaling (Cover)
+        // Background Scaling (Fit Height)
         if (this.bgSprite.texture && this.bgSprite.texture !== PIXI.Texture.EMPTY) {
-            const bgRatio = this.bgSprite.texture.width / this.bgSprite.texture.height;
-            const screenRatio = this.width / this.height;
-            
-            let scale = 1;
-            if (screenRatio > bgRatio) {
-                scale = this.width / this.bgSprite.texture.width;
-            } else {
-                scale = this.height / this.bgSprite.texture.height;
-            }
+            const scale = this.height / this.bgSprite.texture.height;
             this.bgSprite.scale.set(scale);
             this.bgSprite.position.set(this.width / 2, this.height / 2);
+            
+            // Define Game Area based on BG width
+            // The black area is usually in the center of the BG.
+            // Let's assume we want to center the lanes on the BG.
+            // If BG is narrower than screen, we have empty space on sides (that's fine).
+            // If BG is wider than screen (unlikely if we fit height), we might crop sides.
+            
+            // Actually, user said "game panel needs to be placed in the middle black area of the background image"
+            // And "do not block judge line and key keys".
+            // This implies we should align the lanes to the center of the SCREEN, which coincides with the center of the BG.
         }
 
         const totalW = this.LANE_COUNT * this.LANE_WIDTH;
@@ -281,6 +288,7 @@ export class RhythmGame {
             this.judgeSprite.texture = this.app.renderer.generateTexture(gr);
             this.judgeSprite.position.set(this.width / 2, this.HIT_Y);
         }
+        this.judgeSprite.visible = false; // Ensure it remains hidden
         
         // Key beams (pressed state) -> Replaced by Key Images
         if (this.keyBeams) {
@@ -288,7 +296,8 @@ export class RhythmGame {
         }
         this.keyBeams = []; // Keep array but empty to avoid errors if referenced
 
-        // Setup Key Sprites
+        // Setup Key Sprites (Removed)
+        /*
         if (this.assetsLoaded && this.textures.keys) {
             for(let lane=0; lane<4; lane++) {
                 const col = this.laneColumn[lane] ?? lane;
@@ -315,12 +324,13 @@ export class RhythmGame {
                 }
             }
         }
+        */
     }
     
     onResize() {
         this.width = this.app.screen.width;
         this.height = this.app.screen.height;
-        this.HIT_Y = this.height - 150;
+        this.HIT_Y = this.height - 108;
         this.drawLayout();
         if (this.offsetText) {
             this.offsetText.position.set(this.app.screen.width - 20, 20);
@@ -677,10 +687,12 @@ export class RhythmGame {
         const lane = this.keys[e.code];
         this.heldLanes[lane] = true;
         
-        // Show Key Sprite
+        // Show Key Sprite (Removed)
+        /*
         if (this.keySprites && this.keySprites[lane]) {
             this.keySprites[lane].visible = true;
         }
+        */
         
         this.checkHit(lane);
     }
@@ -690,10 +702,12 @@ export class RhythmGame {
         const lane = this.keys[e.code];
         this.heldLanes[lane] = false;
         
-        // Hide Key Sprite
+        // Hide Key Sprite (Removed)
+        /*
         if (this.keySprites && this.keySprites[lane]) {
             this.keySprites[lane].visible = false;
         }
+        */
         
         // Handle LN Release
         this.checkLNRelease(lane);
