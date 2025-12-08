@@ -11,6 +11,9 @@ const el = {
     hudComboBox: document.getElementById('hud-combo-box')
 };
 
+const DESIGN_WIDTH = 1920;
+const DESIGN_HEIGHT = 1080;
+
 export class RhythmGame {
     constructor(container) {
         this.app = new PIXI.Application({
@@ -20,18 +23,17 @@ export class RhythmGame {
             resolution: window.devicePixelRatio || 1
         });
         container.appendChild(this.app.view);
+        
+        // Set logical resolution
+        this.width = DESIGN_WIDTH;
+        this.height = DESIGN_HEIGHT;
+
         try {
             this._resizeObserver = new ResizeObserver(() => {
-                this.width = this.app.screen.width;
-                this.height = this.app.screen.height;
-                this.HIT_Y = this.height - 108;
                 this.onResize();
             });
             this._resizeObserver.observe(container);
         } catch(e) {}
-        
-        this.width = this.app.screen.width;
-        this.height = this.app.screen.height;
         
         // Constants
         this.LANE_COUNT = 4;
@@ -50,13 +52,13 @@ export class RhythmGame {
         // Layers
         this.stage = this.app.stage;
         
+        this.gameContainer = new PIXI.Container();
+        this.stage.addChild(this.gameContainer);
+
         // Background Layer
         this.bgSprite = new PIXI.Sprite();
         this.bgSprite.anchor.set(0.5, 0.5);
-        this.stage.addChild(this.bgSprite);
-
-        this.gameContainer = new PIXI.Container();
-        this.stage.addChild(this.gameContainer);
+        this.gameContainer.addChild(this.bgSprite);
         
         // Internal Layers for proper Z-indexing
         this.laneLayer = new PIXI.Container();
@@ -114,8 +116,8 @@ export class RhythmGame {
             this.textures.bg = await PIXI.Assets.load('source/BG2.png');
             this.textures.note1 = await PIXI.Assets.load('source/note1.png');
             this.textures.note2 = await PIXI.Assets.load('source/note2.png');
-            this.textures.ln1 = await PIXI.Assets.load('source/ln1.png');
-            this.textures.ln2 = await PIXI.Assets.load('source/ln2.png');
+            this.textures.ln1 = await PIXI.Assets.load('source/ln2.png');
+            this.textures.ln2 = await PIXI.Assets.load('source/ln1.png');
             
             // Assign textures based on lane type
             // Outer lanes (0, 3) use note1/ln1
@@ -235,9 +237,10 @@ export class RhythmGame {
     }
     
     drawLayout() {
-        this.width = this.app.screen.width;
-        this.height = this.app.screen.height;
-        this.HIT_Y = this.height - 108;
+        // Ensure we are using design resolution
+        this.width = DESIGN_WIDTH;
+        this.height = DESIGN_HEIGHT;
+        this.HIT_Y = this.height - 123;
         
         // Background Scaling (Fit Height)
         if (this.bgSprite.texture && this.bgSprite.texture !== PIXI.Texture.EMPTY) {
@@ -245,33 +248,17 @@ export class RhythmGame {
             this.bgSprite.scale.set(scale);
             this.bgSprite.position.set(this.width / 2, this.height / 2);
             
-            // Define Game Area based on BG width
-            // The black area is usually in the center of the BG.
-            // Let's assume we want to center the lanes on the BG.
-            // If BG is narrower than screen, we have empty space on sides (that's fine).
-            // If BG is wider than screen (unlikely if we fit height), we might crop sides.
-            
-            // Actually, user said "game panel needs to be placed in the middle black area of the background image"
-            // And "do not block judge line and key keys".
-            // This implies we should align the lanes to the center of the SCREEN, which coincides with the center of the BG.
+            // Recalculate LANE_WIDTH based on BG width
+            // User requested: Track Width = BG Width - 88 (44px on each side)
+            const bgDisplayWidth = this.bgSprite.texture.width * scale;
+            const trackWidth = bgDisplayWidth - 106;
+            this.LANE_WIDTH = trackWidth / this.LANE_COUNT;
         }
 
         const totalW = this.LANE_COUNT * this.LANE_WIDTH;
         this.startX = (this.width - totalW) / 2;
         
         this.laneGraphics.clear();
-        // Remove dark background to show BG
-        // this.laneGraphics.beginFill(0x000000, 0.8); 
-        // this.laneGraphics.drawRect(this.startX, 0, totalW, this.height);
-        // this.laneGraphics.endFill();
-        
-        // Dividers only (and maybe a very light tint if needed, or just lines)
-        this.laneGraphics.lineStyle(2, 0xffffff, 0.3); // White dividers, low alpha
-        for (let i = 0; i <= this.LANE_COUNT; i++) {
-            const x = this.startX + i * this.LANE_WIDTH;
-            this.laneGraphics.moveTo(x, 0);
-            this.laneGraphics.lineTo(x, this.height);
-        }
         
         // Judge Line
         if (this.assetsLoaded && this.textures.judgeLine) {
@@ -295,55 +282,19 @@ export class RhythmGame {
             this.keyBeams.forEach(b => b.destroy());
         }
         this.keyBeams = []; // Keep array but empty to avoid errors if referenced
-
-        // Setup Key Sprites (Removed)
-        /*
-        if (this.assetsLoaded && this.textures.keys) {
-            for(let lane=0; lane<4; lane++) {
-                const col = this.laneColumn[lane] ?? lane;
-                const spr = this.keySprites[lane];
-                if (spr) {
-                    // Map lane to key texture: 
-                    // Lane 0 -> key1
-                    // Lane 1 -> key2
-                    // Lane 2 -> key3
-                    // Lane 3 -> key4
-                    // Or maybe symmetric? Usually 4k is 1-2-2-1 or 1-2-3-4. 
-                    // Looking at file names key1..4, let's assume 1=LeftOuter, 2=LeftInner, 3=RightInner, 4=RightOuter
-                    // Lane 0: key1, Lane 1: key2, Lane 2: key3, Lane 3: key4
-                    const texIndex = lane; // 0..3
-                    if (this.textures.keys[texIndex]) {
-                        spr.texture = this.textures.keys[texIndex];
-                        spr.width = this.LANE_WIDTH;
-                        spr.scale.y = spr.scale.x; // Maintain aspect
-                        spr.position.set(
-                            this.startX + col * this.LANE_WIDTH + this.LANE_WIDTH/2, 
-                            this.HIT_Y + 15 // Slightly below hit line
-                        );
-                    }
-                }
-            }
-        }
-        */
     }
     
     onResize() {
-        this.width = this.app.screen.width;
-        this.height = this.app.screen.height;
-        this.HIT_Y = this.height - 108;
-        this.drawLayout();
-        if (this.offsetText) {
-            this.offsetText.position.set(this.app.screen.width - 20, 20);
-        }
-        if (this.speedText) {
-            this.speedText.position.set(this.app.screen.width - 20, 44);
-        }
-        if (this.comboSprite) {
-            this.comboSprite.position.set(this.app.screen.width / 2, this.app.screen.height * 0.24);
-        }
-        if (this.comboDigits) {
-            this.comboDigits.position.set(this.app.screen.width / 2, this.app.screen.height * 0.30);
-        }
+        const sw = window.innerWidth;
+        const sh = window.innerHeight;
+
+        const scale = Math.min(sw / DESIGN_WIDTH, sh / DESIGN_HEIGHT);
+
+        this.gameContainer.scale.set(scale);
+        this.gameContainer.position.set(
+            (sw - DESIGN_WIDTH * scale) / 2,
+            (sh - DESIGN_HEIGHT * scale) / 2
+        );
     }
     
     async start(chart, audioUrl) {
@@ -424,12 +375,18 @@ export class RhythmGame {
             let noteTex = fallbackTex;
             let bodyTex = fallbackTex;
             if (this.assetsLoaded) {
-                if (note.lane === 0 || note.lane === 3) {
-                     noteTex = this.textures.noteA;
-                     bodyTex = this.textures.lnA;
-                } else {
-                     noteTex = this.textures.noteB;
-                     bodyTex = this.textures.lnB;
+                if (note.lane === 0) {
+                    noteTex = this.textures.noteB;
+                    bodyTex = this.textures.ln2;
+                } else if (note.lane === 1) {
+                    noteTex = this.textures.noteB; // swapped with lane 3
+                    bodyTex = this.textures.ln2;
+                } else if (note.lane === 2) {
+                    noteTex = this.textures.noteA; // paired with lane 4 after swap
+                    bodyTex = this.textures.ln1;
+                } else if (note.lane === 3) {
+                    noteTex = this.textures.noteA; // swapped from noteB
+                    bodyTex = this.textures.ln1;
                 }
             }
             
@@ -479,6 +436,10 @@ export class RhythmGame {
         this.audioSource = this.audioContext.createBufferSource();
         this.audioSource.buffer = this.audioBuffer;
         this.audioSource.connect(this.audioContext.destination);
+        this.audioSource.onended = () => {
+            const btnExit = document.getElementById('btn-exit');
+            if (btnExit) btnExit.click();
+        };
         
         // Schedule start
         // Use a small delay to ensure smooth start
@@ -768,14 +729,20 @@ export class RhythmGame {
         this.comboDigits.removeChildren();
         const sprites = [];
         let totalW = 0;
-        const H = 128;
+        const H = 128; // Doubled size (was 128)
         const F = 1.0;
         for (const ch of str) {
             const idx = parseInt(ch, 10);
             const tex = this.textures.comboDigits[idx];
             const spr = new PIXI.Sprite(tex);
             spr.anchor.set(0.5, 0.5);
-            spr.height = H;
+            // Maintain aspect ratio
+            if (tex.height > 0) {
+                const s = H / tex.height;
+                spr.scale.set(s);
+            } else {
+                spr.height = H; // Fallback
+            }
             sprites.push(spr);
             totalW += spr.width * F;
         }
@@ -940,46 +907,21 @@ export class RhythmGame {
         // But for now it's fine.
         
         // Update Combo Digits
-        if (this.comboDigits) {
-            this.comboDigits.removeChildren();
-            if (this.stats.combo > 0) {
-                const str = this.stats.combo.toString();
-                const totalWidth = str.length * 40; // Approx width
-                let startX = -totalWidth / 2;
-                
-                for (let i = 0; i < str.length; i++) {
-                    const digit = parseInt(str[i]);
-                    if (this.textures.comboDigits && this.textures.comboDigits[digit]) {
-                        const s = new PIXI.Sprite(this.textures.comboDigits[digit]);
-                        s.x = startX + i * 40;
-                        s.y = 0;
-                        s.scale.set(0.8); // Adjust scale
-                        this.comboDigits.addChild(s);
-                    }
-                }
-                this.comboDigits.visible = true;
-                this.comboSprite.visible = true;
-                
-                // Pulse effect
-                this.comboDigits.scale.set(1.2);
-                // We need a ticker for this specific tween or just use a simple decay in update loop
-                // For now, just let it be static or simple logic
-            } else {
-                this.comboDigits.visible = false;
-                this.comboSprite.visible = false;
-            }
+        this.updateComboDigits();
+        if (this.comboSprite) {
+            this.comboSprite.visible = (this.stats.combo > 0);
         }
     }
     
     showHitEffect(lane, judge) {
         const x = this.startX + (this.laneColumn[lane] ?? lane) * this.LANE_WIDTH + this.LANE_WIDTH/2;
-        const y = this.HIT_Y;
+        const y = this.HIT_Y; // Sync with Judge Line
         
         if (this.assetsLoaded && this.textures.flares && this.textures.flares.length > 0) {
             const spr = new PIXI.Sprite(this.textures.flares[0]);
-            spr.anchor.set(0.5, 0.5);
-            spr.position.set(x, y);
-            spr.width = 240;
+            spr.anchor.set(0.5, 0.5); // Center anchor
+            spr.position.set(x, y);   // Position at lane center and judge line
+            spr.width = 240;          // Fixed size
             spr.height = 240;
             spr.blendMode = PIXI.BLEND_MODES.ADD;
             this.effectsLayer.addChild(spr);
@@ -1035,7 +977,7 @@ export class RhythmGame {
             const sprite = new PIXI.Sprite(tex);
             sprite.anchor.set(0.5, 0.5);
             sprite.position.set(this.width / 2, this.HIT_Y - 100);
-            sprite.scale.set(0.8); // Initial scale
+            sprite.scale.set(1.6); // Initial scale (doubled from 0.8)
             sprite.alpha = 0;
             
             this.effectsLayer.addChild(sprite);
@@ -1047,11 +989,11 @@ export class RhythmGame {
                 if (t < 0.2) {
                     // Fade in and scale up
                     sprite.alpha = t * 5;
-                    sprite.scale.set(0.8 + t);
+                    sprite.scale.set(1.6 + t * 2); // Animate from 1.6 to 2.0
                 } else if (t < 0.8) {
                     // Hold
                     sprite.alpha = 1;
-                    sprite.scale.set(1);
+                    sprite.scale.set(2.0); // Hold at 2.0 (doubled from 1.0)
                 } else {
                     // Fade out
                     sprite.alpha = 1 - (t - 0.8) * 2;
