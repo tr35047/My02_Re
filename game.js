@@ -116,8 +116,8 @@ export class RhythmGame {
             this.textures.bg = await PIXI.Assets.load('source/BG2.png');
             this.textures.note1 = await PIXI.Assets.load('source/note1.png');
             this.textures.note2 = await PIXI.Assets.load('source/note2.png');
-            this.textures.ln1 = await PIXI.Assets.load('source/ln2.png');
-            this.textures.ln2 = await PIXI.Assets.load('source/ln1.png');
+            this.textures.ln1 = await PIXI.Assets.load('source/ln1.png');
+            this.textures.ln2 = await PIXI.Assets.load('source/ln2.png');
             
             // Assign textures based on lane type
             // Outer lanes (0, 3) use note1/ln1
@@ -276,6 +276,25 @@ export class RhythmGame {
             this.judgeSprite.position.set(this.width / 2, this.HIT_Y);
         }
         this.judgeSprite.visible = false; // Ensure it remains hidden
+        
+        // Create/Update Mask for Game Area
+        // User request: Reduce bottom to JudgeLine - 9px
+        if (!this.areaMask) {
+            this.areaMask = new PIXI.Graphics();
+            this.gameContainer.addChild(this.areaMask);
+        }
+        this.areaMask.clear();
+        this.areaMask.beginFill(0xffffff);
+        // Draw from top (including off-screen notes above) to HIT_Y - 9
+        // Using a large negative y to ensure we cover notes spawning above
+        this.areaMask.drawRect(0, -2000, this.width, (this.HIT_Y + 9) + 2000); 
+        this.areaMask.endFill();
+        
+        // Apply mask to relevant layers
+        this.laneLayer.mask = this.areaMask;
+        this.notesLayer.mask = this.areaMask;
+        this.keyLayer.mask = this.areaMask;
+        this.judgeLayer.mask = this.areaMask;
         
         // Key beams (pressed state) -> Replaced by Key Images
         if (this.keyBeams) {
