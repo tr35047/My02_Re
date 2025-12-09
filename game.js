@@ -240,6 +240,8 @@ export class RhythmGame {
         // Ensure we are using design resolution
         this.width = DESIGN_WIDTH;
         this.height = DESIGN_HEIGHT;
+        
+        // 1. Judge Line Position (Global Reference)
         this.HIT_Y = this.height - 123;
         
         // Background Scaling (Fit Height)
@@ -249,14 +251,40 @@ export class RhythmGame {
             this.bgSprite.position.set(this.width / 2, this.height / 2);
             
             // Recalculate LANE_WIDTH based on BG width
-            // User requested: Track Width = BG Width - 88 (44px on each side)
+            // User requested: Track Width = BG Width - 106
             const bgDisplayWidth = this.bgSprite.texture.width * scale;
             const trackWidth = bgDisplayWidth - 106;
             this.LANE_WIDTH = trackWidth / this.LANE_COUNT;
         }
 
+        // 2. Note Size & Lane Width (Global Reference)
+        // Ensure reasonable defaults if BG failed
+        if (!this.LANE_WIDTH || this.LANE_WIDTH < 10) this.LANE_WIDTH = 333 / 4;
+
         const totalW = this.LANE_COUNT * this.LANE_WIDTH;
         this.startX = (this.width - totalW) / 2;
+        
+        // 3. Effect Size (Dynamic based on Lane Width)
+        // Base size 240px for ~80px lane. Ratio ~3.0
+        this.EFFECT_SIZE = Math.max(150, this.LANE_WIDTH * 3.0);
+        
+        // 4. Judge Sprite Scale (Fixed for now, but recorded)
+        this.JUDGE_SCALE_BASE = 1.6;
+        this.JUDGE_Y = this.HIT_Y - 100;
+
+        // 5. Combo Size (Recorded)
+        this.COMBO_SCALE = 1.0;
+        this.COMBO_Y = this.height * 0.30;
+        
+        // Update Combo Position
+        if (this.comboSprite) {
+            this.comboSprite.position.set(this.width / 2, this.COMBO_Y - 60); // Slightly above digits
+            this.comboSprite.scale.set(this.COMBO_SCALE);
+        }
+        if (this.comboDigits) {
+            this.comboDigits.position.set(this.width / 2, this.COMBO_Y);
+            this.comboDigits.scale.set(this.COMBO_SCALE);
+        }
         
         this.laneGraphics.clear();
         
@@ -335,12 +363,6 @@ export class RhythmGame {
         if (failTitle) failTitle.style.opacity = 0;
         this.updateHUD();
         const self = this;
-        if (this.audioSource) this.audioSource.onended = () => {
-            const r = { cool: self.stats.cool || 0, good: self.stats.good || 0, bad: self.stats.bad || 0, miss: self.stats.miss || 0, maxCombo: self.stats.maxCombo || 0 };
-            self.lastResults = r;
-            const btnExit = document.getElementById('btn-exit');
-            if (btnExit) btnExit.click();
-        };
         
         // Stop previous audio if any
         if (this.audioSource) {
@@ -456,8 +478,22 @@ export class RhythmGame {
         this.audioSource.buffer = this.audioBuffer;
         this.audioSource.connect(this.audioContext.destination);
         this.audioSource.onended = () => {
-            const btnExit = document.getElementById('btn-exit');
-            if (btnExit) btnExit.click();
+            const r = { 
+                cool: this.stats.cool || 0, 
+                good: this.stats.good || 0, 
+                bad: this.stats.bad || 0, 
+                miss: this.stats.miss || 0, 
+                maxCombo: this.stats.maxCombo || 0 
+            };
+            this.lastResults = r;
+            // Show results instead of exiting immediately
+            if (window.showGameResults) {
+                window.showGameResults(r);
+            } else {
+                // Fallback
+                const btnExit = document.getElementById('btn-exit');
+                if (btnExit) btnExit.click();
+            }
         };
         
         // Schedule start
@@ -940,8 +976,12 @@ export class RhythmGame {
             const spr = new PIXI.Sprite(this.textures.flares[0]);
             spr.anchor.set(0.5, 0.5); // Center anchor
             spr.position.set(x, y);   // Position at lane center and judge line
-            spr.width = 240;          // Fixed size
-            spr.height = 240;
+            
+            // Use calculated effect size
+            const size = this.EFFECT_SIZE || 240;
+            spr.width = size;
+            spr.height = size;
+            
             spr.blendMode = PIXI.BLEND_MODES.ADD;
             this.effectsLayer.addChild(spr);
             let idx = 0;
@@ -992,11 +1032,15 @@ export class RhythmGame {
         // Use Sprite for Image Judgment
         const tex = this.textures.judgments ? this.textures.judgments[judge.toLowerCase()] : null;
         
+        // Use pre-calculated position and scale
+        const judgeY = this.JUDGE_Y || (this.HIT_Y - 100);
+        const baseScale = this.JUDGE_SCALE_BASE || 1.6;
+        
         if (tex) {
             const sprite = new PIXI.Sprite(tex);
             sprite.anchor.set(0.5, 0.5);
-            sprite.position.set(this.width / 2, this.HIT_Y - 100);
-            sprite.scale.set(1.6); // Initial scale (doubled from 0.8)
+            sprite.position.set(this.width / 2, judgeY);
+            sprite.scale.set(baseScale); // Initial scale
             sprite.alpha = 0;
             
             this.effectsLayer.addChild(sprite);
@@ -1008,11 +1052,11 @@ export class RhythmGame {
                 if (t < 0.2) {
                     // Fade in and scale up
                     sprite.alpha = t * 5;
-                    sprite.scale.set(1.6 + t * 2); // Animate from 1.6 to 2.0
+                    sprite.scale.set(baseScale + t * 2); // Animate scale
                 } else if (t < 0.8) {
                     // Hold
                     sprite.alpha = 1;
-                    sprite.scale.set(2.0); // Hold at 2.0 (doubled from 1.0)
+                    sprite.scale.set(baseScale + 0.4); // Hold at slightly larger
                 } else {
                     // Fade out
                     sprite.alpha = 1 - (t - 0.8) * 2;

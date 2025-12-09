@@ -298,7 +298,7 @@
             inset: 0;
             z-index: 5;
             background-color: #000;
-            background-image: url('source/BG2.PNG');
+            /* background-image: url('source/BG2.PNG'); */ /* Removed to prevent double background */
             background-position: center;
             background-repeat: no-repeat;
             background-size: contain;
@@ -650,33 +650,71 @@
         window.gameInstance.start(state.chart, state.audioUrl);
     };
 
+    // Common Exit Function
+    const exitGame = () => {
+        if (window.gameInstance) window.gameInstance.stop();
+        el.gameContainer.classList.remove('active');
+        el.selectView.classList.remove('hidden');
+        // Hide result modal if open
+        const m = document.getElementById('result-modal');
+        if (m) m.classList.remove('show');
+    };
+
+    // Show Results Function
+    window.showGameResults = (r) => {
+        const m = document.getElementById('result-modal');
+        if (m && r) {
+            const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = String(val); };
+            set('result-cool', r.cool);
+            set('result-good', r.good);
+            set('result-bad', r.bad);
+            set('result-miss', r.miss);
+            set('result-maxcombo', r.maxCombo);
+            m.classList.add('show');
+        }
+    };
+
     if (el.btnExit) {
         el.btnExit.onclick = () => {
-            if (window.gameInstance) window.gameInstance.stop();
-            el.gameContainer.classList.remove('active');
-            el.selectView.classList.remove('hidden');
-            const m = document.getElementById('result-modal');
-            if (window.gameInstance && window.gameInstance.lastResults && m) {
-                const r = window.gameInstance.lastResults;
-                const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = String(val); };
-                set('result-cool', r.cool);
-                set('result-good', r.good);
-                set('result-bad', r.bad);
-                set('result-miss', r.miss);
-                set('result-maxcombo', r.maxCombo);
-                m.classList.add('show');
-            }
+            // Manual exit (ESC or button) -> Go back to select screen directly
+            // Usually we don't show results on manual exit, or we can clear lastResults
+            if (window.gameInstance) window.gameInstance.lastResults = null; 
+            exitGame();
         };
     }
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            if (el && el.btnExit) el.btnExit.click();
+            // Only trigger if game is active
+            if (el.gameContainer.classList.contains('active')) {
+                if (el && el.btnExit) el.btnExit.click();
+            }
         }
     });
 
 </script>
 </body>
 </html>
-    const modal = document.getElementById('result-modal');
-    const btnClose = document.getElementById('result-close');
-    if (btnClose) btnClose.onclick = () => { if (modal) modal.classList.remove('show'); };
+<script>
+    // Moved outside module script to be accessible if needed, or keep inside? 
+    // Actually the button listeners should be set up inside the module where we have access to 'el' or just use document.getElementById
+    // The previous code had a script block AFTER </html> which is invalid HTML but browsers tolerate it.
+    // I will fix this by putting the listener inside the main module script above.
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('result-modal');
+        const btnClose = document.getElementById('result-close');
+        if (btnClose) {
+            btnClose.onclick = () => {
+                // When closing results, we exit the game view
+                // We need to call exitGame(). Since exitGame is defined in the module, we can't access it directly.
+                // But we can trigger the exit button click? 
+                // Or better, make exitGame global or accessible.
+                
+                // Let's check if we can access the exit button.
+                const btnExit = document.getElementById('btn-exit');
+                if (btnExit) btnExit.click();
+            };
+        }
+    });
+</script>
