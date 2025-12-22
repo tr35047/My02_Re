@@ -24,6 +24,18 @@ export class RhythmGame {
         });
         container.appendChild(this.app.view);
         
+        // Canvas Style Settings
+        // You can customize the canvas appearance here
+        this.app.view.style.display = 'block';
+        this.app.view.style.touchAction = 'none'; // Prevent default touch actions like scrolling
+        this.app.view.style.outline = 'none';  
+        this.app.view.style.position = 'absolute'
+        this.app.view.style.bottom = '0'
+        this.app.view.style.height = '100%'
+        // Remove focus outline
+        // this.app.view.style.cursor = 'none';   // Uncomment to hide cursor over game
+        // this.app.view.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)'; // Example shadow
+        
         // Set logical resolution
         this.width = DESIGN_WIDTH;
         this.height = DESIGN_HEIGHT;
@@ -335,13 +347,30 @@ export class RhythmGame {
         const sw = window.innerWidth;
         const sh = window.innerHeight;
 
-        const scale = Math.min(sw / DESIGN_WIDTH, sh / DESIGN_HEIGHT);
+        // Scale based on height to match browser height (100% height)
+        const scale = sh / DESIGN_HEIGHT;
 
         this.gameContainer.scale.set(scale);
-        this.gameContainer.position.set(
-            (sw - DESIGN_WIDTH * scale) / 2,
-            (sh - DESIGN_HEIGHT * scale) / 2
-        );
+        
+        // Center horizontally
+        // If screen is narrower than game width, sides will be cropped (negative x)
+        // If screen is wider, there will be black bars (positive x)
+        const x = (sw - DESIGN_WIDTH * scale) / 2;
+        const y = 0; // Top align as height matches 100%
+        
+        this.gameContainer.position.set(x, y);
+        
+        // Sync HUD position to match Game Container
+        const hud = document.getElementById('game-hud');
+        if (hud) {
+            hud.style.left = `${x}px`;
+            hud.style.top = `${y}px`;
+            hud.style.width = `${DESIGN_WIDTH * scale}px`;
+            hud.style.height = `${DESIGN_HEIGHT * scale}px`;
+            // Reset inset since we are manually positioning
+            hud.style.right = 'auto';
+            hud.style.bottom = 'auto';
+        }
     }
     
     async start(chart, audioUrl) {
