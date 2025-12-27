@@ -267,7 +267,7 @@
         }
 
         .start-btn {
-            background: linear-gradient(180deg, #00eaff 0%, #00b3cc 100%);
+                background: linear-gradient(180deg, #2dff00 0%, #00ccaa 100%);
             border: 2px solid #0ef;
             padding: 12px 60px;
             font-size: 24px;
@@ -602,12 +602,12 @@
         
         try {
             // Load BMS
-            const r1 = await fetch('4K.bms');
+            const r1 = await fetch('map/4K.bms');
             if (!r1.ok) throw new Error('BMS Missing');
             state.bmsText = await r1.text();
             
             // Load Audio
-            state.audioUrl = 'cut.mp3';
+            state.audioUrl = 'music/cut.mp3';
             el.bgm.src = state.audioUrl;
             
             const parser = new BMSParser(state.bmsText);
