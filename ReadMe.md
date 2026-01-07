@@ -1,17 +1,79 @@
-# Myo2_Re 重置版说明
+# MyO2 Web Simulator (MyO2_Re)
 
-### github：https://github.com/tr35047/My02_Re
+这是一个基于 Web (HTML5 + Pixi.js) 的音乐节奏游戏模拟器，复刻了经典的 O2Jam 游戏风格。它支持加载 BMS 格式的谱面文件，并在浏览器中直接运行。
 
-### 目录结构
+### Github
+https://github.com/tr35047/My02_Re
+
+## 功能特性
+
+*   **Web 端运行**：基于 Pixi.js 渲染，流畅的 60fps+ 体验。
+*   **BMS 支持**：支持解析和播放标准 BMS 格式谱面 (`.bms`, `.bme`, `.bml`, `.txt`)。
+*   **本地加载**：支持用户选择本地的谱面文件和音频文件进行游戏。
+*   **游戏系统**：
+    *   经典的下落式玩法 (4Key 模式)。
+    *   精准的判定系统 (Cool/Good/Bad/Miss)。
+    *   连击 (Combo) 和结算统计。
+    *   长按音符 (Long Note) 支持。
+*   **辅助功能**：
+    *   **自动演示 (Auto Play)**：观看谱面自动运行。
+    *   **速度调节**：支持 x1.0 ~ x10.0 的下落速度调节。
+    *   **延迟微调**：游戏内可实时调整判定延迟 (Offset)。
+
+## 目录结构
+
 ~~~
-├──docs                        说明文件
-├──map                         谱面文件
-├──music                       音频
-├──source                      静态资源
-├──bms.js                      bms谱面加载器
-├──game.js                     游戏面板
-├──index.html                  入口文件
-├──LICENSE                     免责声明
-├──pixi.min.js                 pixi web引擎
-├──ReadMe.md                   项目说明文件
+├── docs/                       # 说明文档与开发资料
+│   ├── ucs.json                # UCS 编码表
+│   └── *.txt                   # 各类开发笔记 (坐标、键位等)
+├── map/                        # 示例谱面文件 (.bms)
+├── music/                      # 示例音频文件 (.mp3)
+├── source/                     # 游戏静态资源 (图片、皮肤、音效)
+├── bms.js                      # BMS 谱面解析器核心逻辑
+├── game.js                     # 游戏主逻辑 (渲染、判定、循环)
+├── index.html                  # 游戏入口文件 (UI 与交互)
+├── pixi.min.js                 # Pixi.js 引擎库
+├── LICENSE                     # 许可证文件
+└── ReadMe.md                   # 项目说明文件
 ~~~
+
+## 快速开始
+
+由于浏览器安全策略限制（CORS），直接双击打开 `index.html` 可能无法正确加载本地资源或示例歌曲。建议使用本地服务器运行。
+
+### 方法 1：使用 Python (推荐)
+如果你安装了 Python，可以在项目根目录下运行：
+```bash
+python -m http.server 8000
+```
+然后在浏览器访问 `http://localhost:8000`。
+
+### 方法 2：使用 VS Code Live Server
+如果你使用 VS Code，安装 "Live Server" 插件，右键 `index.html` 选择 "Open with Live Server"。
+
+## 操作说明
+
+### 选歌界面
+*   **加载本地谱面**：点击按钮选择 `.bms` 文件。
+*   **加载本地音频**：点击按钮选择配套的音频文件 (`.mp3`/`.ogg`/`.wav`)。
+*   **加载示例歌曲**：点击 "加载示例歌曲" 可直接游玩内置演示曲。
+*   **调整速度**：点击右侧 "速度" 栏的左右箭头调节下落速度。
+*   **自动演示**：点击 "自动演示" 开启/关闭 Auto 模式。
+
+### 游戏内操作 (默认 4K 键位)
+
+| 轨道 | 按键 | 说明 |
+| :--- | :---: | :--- |
+| Lane 1 | **D** | 左侧第一轨 |
+| Lane 2 | **F** | 左侧第二轨 |
+| Lane 3 | **J** | 右侧第一轨 |
+| Lane 4 | **K** | 右侧第二轨 |
+
+*   **ESC**: 退出游戏 / 返回选歌界面
+*   **← (左箭头)**: 减少判定延迟 (-10ms)
+*   **→ (右箭头)**: 增加判定延迟 (+10ms)
+
+## 开发说明
+*   **Core**: 游戏核心逻辑位于 `game.js`，基于 `RhythmGame` 类。
+*   **Parser**: BMS 解析逻辑位于 `bms.js`，支持基础的 Header 解析和 Main Channel 对象生成。
+*   **UI**: 界面交互逻辑位于 `index.html`。
